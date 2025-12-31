@@ -1,0 +1,553 @@
+<div class="spinner-container" *ngIf="isSpinnerVisible">
+  <div class="cssload-loader">
+    <div class="cssload-inner cssload-one"></div>
+    <div class="cssload-inner cssload-two"></div>
+    <div class="cssload-inner cssload-three"></div>
+  </div>
+</div>
+
+<div class="pur-create-container">
+  <mat-tab-group class="modern-tabs">
+    <mat-tab label="Purchase Order">
+      <mat-stepper #stepper class="modern-stepper">
+        <mat-step errorMessage="Details is required.">
+          <ng-template matStepLabel>Enter Details</ng-template>
+          <div class="form-section">
+            <div class="form-grid">
+              <div class="form-column">
+                <div class="form-group">
+                  <label class="form-label">Company Name</label>
+                  <input type="text" class="modern-input" id="CompanyName" [(ngModel)]="companyName"
+                    placeholder="Your Company Name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Company Address</label>
+                  <textarea class="modern-textarea" id="CompanyAddress" [(ngModel)]="companyAddress"
+                    placeholder="Company Address" required></textarea>
+                </div>
+                <div class="section-header">
+                  <h3>Purchase Order to:</h3>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Vendor's Name</label>
+                  <input type="text" class="modern-input" id="VendorsName" [(ngModel)]="vendorName"
+                    placeholder="Vendor's Name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Vendor Address</label>
+                  <textarea class="modern-textarea" id="VendorAddress" [(ngModel)]="vendorAddress"
+                    placeholder="Vendor Address" required></textarea>
+                </div>
+              </div>
+              <div class="form-column">
+                <div class="form-group">
+                  <label class="form-label">Logo Upload</label>
+                  <input accept="image/*" class="file-input" name="arquivo" id="arquivo" type="file" #arquivo>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Purchase Order No.</label>
+                  <div class="input-with-prefix">
+                    <span class="prefix">#</span>
+                    <input type="text" class="modern-input" id="PurchaseNo" [(ngModel)]="purchaseOrderNo"
+                      placeholder="Purchase Order no." required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <mat-form-field class="modern-date-field">
+                    <mat-label>Order Date</mat-label>
+                    <input matInput [matDatepicker]="picker" placeholder="Date" [(ngModel)]="orderDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="form-group">
+                  <mat-form-field class="modern-date-field">
+                    <mat-label>Due Date</mat-label>
+                    <input matInput [matDatepicker]="picker2" placeholder="Due Date" [(ngModel)]="dueDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            
+            <div class="items-section">
+              <div class="section-header">
+                <h3>Items</h3>
+                <button class="add-item-btn" (click)="addItem()">
+                  <i class="fas fa-plus"></i> Add Item
+                </button>
+              </div>
+              <div class="modern-table-wrapper">
+                <table class="modern-table">
+                  <thead>
+                    <tr>
+                      <th>S.N.</th>
+                      <th>Item</th>
+                      <th>Quantity</th>
+                      <th>Rate</th>
+                      <th>Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of items; let i = index">
+                      <td class="text-center">{{ i + 1 }}</td>
+                      <td>
+                        <select class="modern-select" [(ngModel)]="item.item" (change)="onSelectChange($event)">
+                          <option value="" disabled selected>Select Item</option>
+                          <option *ngFor="let item of dropitems" [value]="item">{{ item }}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.quantity" placeholder="0"
+                          (ngModelChange)="calculateAmount(item)">
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.rate" placeholder="0.0"
+                          (ngModelChange)="calculateAmount(item)">
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.amount" placeholder="0.0" readonly>
+                      </td>
+                      <td class="text-center">
+                        <button class="remove-btn" (click)="removeItem(i)" title="Remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="totals-section">
+              <div class="total-row">
+                <label class="total-label">Total:</label>
+                <input type="text" class="total-input" id="TotalAmount" [(ngModel)]="totalAmount"
+                  placeholder="00.00" readonly>
+              </div>
+            </div>
+
+            <div class="notes-section">
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="modern-textarea" id="Notes" [(ngModel)]="notes" placeholder="Additional notes..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Terms & Conditions</label>
+                <textarea class="modern-textarea" id="TC" [(ngModel)]="termsAndConditions" placeholder="Terms and conditions..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="action-btn primary-btn" mat-button matStepperNext>
+                <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="action-btn success-btn" mat-button (click)="savePurchase()">
+                <i class="fas fa-save"></i> Save
+              </button>
+            </div>
+          </div>
+        </mat-step>
+        
+        <mat-step errorMessage="Address is required.">
+          <ng-template matStepLabel>Preview</ng-template>
+          <div #previewContent id="preview-content" class="preview-content">
+            <div class="preview-document">
+              <div class="preview-header">
+                <div class="company-info">
+                  <p class="company-name">{{ companyName }}</p>
+                  <p class="company-address">{{ companyAddress }}</p>
+                </div>
+                <div class="logo-preview">
+                  <img id="employeeImage" class="logo-img" alt="Company Logo">
+                </div>
+              </div>
+              <div class="document-title">
+                <h1>Purchase Order</h1>
+              </div>
+              <div class="vendor-section">
+                <div class="vendor-info">
+                  <p class="section-label">Vendor Name and Address:</p>
+                  <p>{{ vendorName }}</p>
+                  <p>{{ vendorAddress }}</p>
+                </div>
+                <div class="order-info">
+                  <p><strong>Purchase Order No:</strong> {{ purchaseOrderNo }}</p>
+                  <p><strong>Date:</strong> {{ orderDate | date: 'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              <div class="preview-table-wrapper">
+                <table class="preview-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item</th>
+                      <th>Quantity</th>
+                      <th>Rate</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of items; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ item.item }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.rate }}</td>
+                      <td>{{ item.amount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="preview-footer">
+                <div class="footer-left">
+                  <div class="footer-section">
+                    <p class="footer-label">INVOICE AMOUNT IN WORDS</p>
+                    <p>Rupees {{ numberToWords(totalAmount) }} only</p>
+                  </div>
+                  <div class="footer-section">
+                    <p class="footer-label">NOTES</p>
+                    <p>{{ notes }}</p>
+                  </div>
+                  <div class="footer-section">
+                    <p class="footer-label">TERMS AND CONDITIONS</p>
+                    <p>{{ termsAndConditions }}</p>
+                  </div>
+                </div>
+                <div class="footer-right">
+                  <p class="total-amount"><strong>Total: {{ totalAmount }}</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <button class="action-btn reset-btn" mat-button (click)="stepper.reset()">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+            <button class="action-btn back-btn" mat-button matStepperPrevious>
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="action-btn download-btn" mat-button (click)="generatePDF()">
+              <i class="fas fa-download"></i> Download PDF
+            </button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </mat-tab>
+    
+    <mat-tab label="Invoice Order">
+      <mat-stepper #stepper2 class="modern-stepper">
+        <mat-step errorMessage="Details is required.">
+          <ng-template matStepLabel>Enter Details</ng-template>
+          <div class="invoice-form-section">
+            <div class="invoice-header">
+              <h1>Invoice</h1>
+            </div>
+            <div class="invoice-form-grid">
+              <div class="invoice-column">
+                <h2 class="column-title">From</h2>
+                <div class="form-group">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="modern-input" id="FrmName" placeholder="Name" [(ngModel)]="frmName" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="text" class="modern-input" id="FrmEmail" placeholder="Email" [(ngModel)]="frmEmail" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Address</label>
+                  <input type="text" class="modern-input" id="FrmAddress" placeholder="Address" [(ngModel)]="frmAddress" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone</label>
+                  <input type="text" class="modern-input" id="FrmPhone" placeholder="Phone" [(ngModel)]="frmPhone" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Business Number</label>
+                  <input type="text" class="modern-input" id="BN" placeholder="Business Number" [(ngModel)]="frmBusNum" required>
+                </div>
+                <div class="form-group">
+                  <button class="link-btn" (click)="additional()">
+                    <i class="fas fa-plus-circle"></i> Additional Business Details
+                  </button>
+                </div>
+                <div class="form-group" *ngIf="ifAddit">
+                  <label class="form-label">Website</label>
+                  <input type="text" class="modern-input" id="FrmWeb" placeholder="Website" [(ngModel)]="frmWeb" required>
+                </div>
+                <div class="form-group" *ngIf="ifAddit">
+                  <label class="form-label">Owner</label>
+                  <input type="text" class="modern-input" id="FrmOwner" placeholder="Owner" [(ngModel)]="frmOwner" required>
+                </div>
+              </div>
+              <div class="invoice-column">
+                <h2 class="column-title">To</h2>
+                <div class="form-group">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="modern-input" id="ToName" placeholder="Name" [(ngModel)]="toName" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="text" class="modern-input" id="ToEmail" placeholder="Email" [(ngModel)]="toEmail" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Address</label>
+                  <input type="text" class="modern-input" id="ToAddress" placeholder="Address" [(ngModel)]="toAddress" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone</label>
+                  <input type="text" class="modern-input" id="ToPhone" placeholder="Phone" [(ngModel)]="toPhone" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mobile</label>
+                  <input type="text" class="modern-input" id="ToMobile" placeholder="Mobile" [(ngModel)]="toNum" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Fax</label>
+                  <input type="text" class="modern-input" id="Fax" placeholder="Fax" [(ngModel)]="toFax" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="items-section">
+              <div class="section-header">
+                <h3>Invoice Items</h3>
+                <button class="add-item-btn" (click)="addItemInv()">
+                  <i class="fas fa-plus"></i> Add Item
+                </button>
+              </div>
+              <div class="modern-table-wrapper">
+                <table class="modern-table">
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>Item</th>
+                      <th>Rate</th>
+                      <th>Quantity</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of invItems; let i = index">
+                      <td class="text-center">
+                        <button class="remove-btn" (click)="removeItemInv(i)" title="Remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </td>
+                      <td>
+                        <div class="item-description-group">
+                          <textarea class="modern-textarea-small" [(ngModel)]="item.desc" placeholder="Item Description"></textarea>
+                          <textarea class="modern-textarea-small" [(ngModel)]="item.addD" placeholder="Additional Details"></textarea>
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.rate" placeholder="0.0"
+                          (ngModelChange)="calculateAmountInv(item)">
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.quantity" placeholder="0"
+                          (ngModelChange)="calculateAmountInv(item)">
+                      </td>
+                      <td>
+                        <input type="text" class="modern-input-small" [(ngModel)]="item.amount" placeholder="0.0" readonly>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="invoice-totals-section">
+              <div class="total-row">
+                <label class="total-label">Subtotal:</label>
+                <span class="total-value">{{ subtotal }}</span>
+              </div>
+              <div class="total-row">
+                <label class="total-label">Discount (5%):</label>
+                <span class="total-value">{{ discountAmount }}</span>
+              </div>
+              <div class="total-row">
+                <label class="total-label">Tax (5%):</label>
+                <span class="total-value">{{ taxAmount }}</span>
+              </div>
+              <div class="total-row highlight">
+                <label class="total-label">Total:</label>
+                <span class="total-value">{{ totalAmount }}</span>
+              </div>
+              <div class="total-row highlight">
+                <label class="total-label">Balance Due:</label>
+                <span class="total-value">{{ balanceDue }}</span>
+              </div>
+            </div>
+
+            <div class="notes-section">
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="modern-textarea" id="Notes" [(ngModel)]="notes" placeholder="Additional notes..."></textarea>
+              </div>
+              <div class="signature-section">
+                <button class="signature-toggle-btn" (click)="signature()">
+                  <i class="fas fa-signature"></i> Signature
+                </button>
+                <div class="signature-pad-container" *ngIf="sign">
+                  <signature-pad [options]="signaturePadOptions" class="signature-pad" (onEnd)="drawComplete()"></signature-pad>
+                  <div class="signature-actions">
+                    <button class="action-btn danger-btn" (click)="clear()">
+                      <i class="fas fa-eraser"></i> Clear
+                    </button>
+                    <button class="action-btn success-btn" (click)="save()">
+                      <i class="fas fa-check"></i> Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-options">
+              <div class="option-card">
+                <h4>Preview Via Email</h4>
+                <input type="text" class="modern-input" id="Email" placeholder="Email" [(ngModel)]="frmEmail" required>
+                <button class="action-btn secondary-btn" style="width: 100%; margin-top: 10px;">
+                  <i class="fas fa-paper-plane"></i> Send
+                </button>
+              </div>
+              <div class="option-card">
+                <h4>Options</h4>
+                <div class="option-buttons">
+                  <button class="action-btn secondary-btn" style="width: 100%;">
+                    <i class="fas fa-link"></i> Get Link
+                  </button>
+                  <button class="action-btn print-btn" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-print"></i> Print Invoice
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="action-btn primary-btn" mat-button matStepperNext>
+                <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="action-btn success-btn" mat-button>
+                <i class="fas fa-save"></i> Save
+              </button>
+            </div>
+          </div>
+        </mat-step>
+        
+        <mat-step errorMessage="Address is required.">
+          <ng-template matStepLabel>Preview</ng-template>
+          <div #previewContentInvoice id="preview-content-invoice" class="preview-content">
+            <div class="preview-document">
+              <div class="preview-header">
+                <div class="company-info">
+                  <p class="company-name">{{ frmName || companyName }}</p>
+                  <p class="company-address">{{ frmAddress || companyAddress }}</p>
+                  <p *ngIf="frmEmail" class="company-email">{{ frmEmail }}</p>
+                  <p *ngIf="frmPhone" class="company-phone">{{ frmPhone }}</p>
+                </div>
+                <div class="logo-preview">
+                  <img id="employeeImageInvoice" class="logo-img" alt="Company Logo">
+                </div>
+              </div>
+              <div class="document-title">
+                <h1>Invoice</h1>
+              </div>
+              <div class="vendor-section">
+                <div class="vendor-info">
+                  <p class="section-label">Bill To:</p>
+                  <p><strong>{{ toName }}</strong></p>
+                  <p>{{ toAddress }}</p>
+                  <p *ngIf="toEmail">{{ toEmail }}</p>
+                  <p *ngIf="toPhone">Phone: {{ toPhone }}</p>
+                  <p *ngIf="toNum">Mobile: {{ toNum }}</p>
+                </div>
+                <div class="order-info">
+                  <p><strong>Invoice Date:</strong> {{ orderDate | date: 'dd/MM/yyyy' }}</p>
+                  <p *ngIf="dueDate"><strong>Due Date:</strong> {{ dueDate | date: 'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              <div class="preview-table-wrapper">
+                <table class="preview-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item Description</th>
+                      <th>Rate</th>
+                      <th>Quantity</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of invItems; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>
+                        <div>
+                          <p style="margin: 0; font-weight: 500;">{{ item.desc || item.invitem }}</p>
+                          <p *ngIf="item.addD" style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #6c757d;">{{ item.addD }}</p>
+                        </div>
+                      </td>
+                      <td>{{ item.rate }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.amount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="invoice-summary">
+                <div class="summary-row">
+                  <span>Subtotal:</span>
+                  <span>{{ subtotal }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Discount (5%):</span>
+                  <span>-{{ discountAmount }}</span>
+                </div>
+                <div class="summary-row">
+                  <span>Tax (5%):</span>
+                  <span>{{ taxAmount }}</span>
+                </div>
+                <div class="summary-row highlight">
+                  <span><strong>Total:</strong></span>
+                  <span><strong>{{ totalAmount }}</strong></span>
+                </div>
+                <div class="summary-row highlight">
+                  <span><strong>Balance Due:</strong></span>
+                  <span><strong>{{ balanceDue }}</strong></span>
+                </div>
+              </div>
+              <div class="preview-footer">
+                <div class="footer-left">
+                  <div class="footer-section">
+                    <p class="footer-label">INVOICE AMOUNT IN WORDS</p>
+                    <p>Rupees {{ numberToWords(totalAmount) }} only</p>
+                  </div>
+                  <div class="footer-section" *ngIf="notes">
+                    <p class="footer-label">NOTES</p>
+                    <p>{{ notes }}</p>
+                  </div>
+                </div>
+                <div class="footer-right">
+                  <p class="total-amount"><strong>Total: {{ totalAmount }}</strong></p>
+                  <p class="total-amount"><strong>Balance Due: {{ balanceDue }}</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-actions">
+            <button class="action-btn reset-btn" mat-button (click)="stepper2.reset()">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+            <button class="action-btn back-btn" mat-button matStepperPrevious>
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="action-btn download-btn" mat-button (click)="generatePDF()">
+              <i class="fas fa-download"></i> Download PDF
+            </button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </mat-tab>
+  </mat-tab-group>
+</div>

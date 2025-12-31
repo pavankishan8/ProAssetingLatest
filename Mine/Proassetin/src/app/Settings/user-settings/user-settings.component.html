@@ -1,0 +1,13 @@
+<div class="headPosi">
+    <app-header></app-header>
+</div>
+
+<div class="row navSet">
+    <div class="col-md-2 navSetIn">
+        <app-settings-nav-bar></app-settings-nav-bar>
+    </div>
+    <div class="col-md-10 insideDiv">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<button (click)="goBack()">Back</button>

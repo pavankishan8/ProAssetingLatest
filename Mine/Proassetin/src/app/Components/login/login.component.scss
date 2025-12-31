@@ -1,0 +1,141 @@
+.login-page-container {
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+  background-image: url("/assets/Images/loginPage2.png");
+  background-color: #EEEEEE;
+}
+
+.primary-area {
+  background: url("/assets/Images/loginPage.png");
+  height: 100%;
+  width: 40%;
+  overflow-y: hidden;
+  background-color: #a7e0f4;
+  transition: background-color 0.5s;
+}
+
+.loginPage {
+  position: absolute;
+  z-index: 9999;
+}
+
+.logo-header {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 4%;
+}
+
+.logo,
+.proassetin,
+.analyzer {
+  font-size: 26px;
+  color: white;
+}
+
+.vital {
+  font-weight: 550;
+  letter-spacing: 0.5px;
+}
+
+.credentials-container {
+  position: absolute;
+  height: 60%;
+  width: 45%;
+  margin: -39% 0 0 33%;
+  background: #b2e4f7 0% 0% no-repeat padding-box;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 1px 15px #00000029;
+}
+
+.user-box {
+  position: relative;
+  margin: 13% 0% -4% 0%;
+}
+
+.user-box input {
+  width: 175%;
+  padding: 10px 0;
+  font-size: 16px;
+  margin: 2% 0 0% 0%;
+  border: none;
+  border-bottom: 1.5px solid #a7e0f4;
+  outline: none;
+  // background: transparent;
+}
+
+.logo-image-with-name {
+  position: absolute;
+  height: 60%;
+  width: 18%;
+  margin: -39% 0 0 22%;
+  background: #85c9e9 0% 0% no-repeat padding-box;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+  border-right: 2px solid rgb(146, 44, 255);
+}
+
+.user-icon {
+  text-align: center;
+  margin: -20% -8% 0% 0%;
+  position: fixed;
+}
+
+.input-field {
+  margin-bottom: 15%;
+}
+
+.error-message {
+  color: red;
+  font-size: 10px;
+  margin: -7% 0% 0% 2%;
+}
+
+
+.btn {
+  color: white;
+  width: 175%;
+  height: 100%;
+  background-color: #85c9e9;
+  margin: 0% 0 -55% 0%;
+  border-radius: 4px;
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+.patent {
+  font-size: 12px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 24%;
+  margin-right: -8%;
+  position: fixed;
+}
+
+.vatalaxis-logo {
+  height: 25px;
+  width: 79px;
+  margin-left: 5px;
+}
+
+.proassetin-logo {
+  height: 50%;
+  width: 100%;
+  padding-right: 6px;
+}
+
+.loginPage {
+  height: 100px;
+  width: 60%;
+  background-color: #85c9e9;
+}

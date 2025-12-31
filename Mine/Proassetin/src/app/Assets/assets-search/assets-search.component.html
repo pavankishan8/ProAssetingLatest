@@ -1,0 +1,562 @@
+<div class="asset-search-container">
+    <div class="search-section">
+        <div class="search-card">
+            <div class="search-input-group">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" 
+                       [(ngModel)]="searchAssetId" 
+                       class="search-input" 
+                       placeholder="Search by Asset ID"
+                       (keyup.enter)="searchAsset(searchAssetId)">
+                <button (click)="searchAsset(searchAssetId)" class="search-btn" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="search-card">
+            <div class="search-input-group">
+                <i class="fas fa-user search-icon"></i>
+                <input type="text" 
+                       [(ngModel)]="searchbyEmpId" 
+                       class="search-input" 
+                       placeholder="Search by Employee ID"
+                       (keyup.enter)="fetchData(searchbyEmpId)">
+                <button (click)="fetchData(searchbyEmpId)" class="search-btn" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="results-section">
+        <div *ngIf="showResDiv" class="result-card">
+            <div class="result-header">
+                <div class="result-title">
+                    <i class="fas fa-box"></i>
+                    <h2>Asset Details</h2>
+                </div>
+                <button (click)="clearBtn()" class="close-btn" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="asset-id-badge">
+                <span class="badge-label">Asset ID</span>
+                <span class="badge-value">{{ searchResult.AssetID }}</span>
+            </div>
+            <div *ngIf="searchResult.Status == 'Active'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge active-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Months In Use</span>
+                    <span class="info-value">{{ searchResult.MonthsInUse || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Next Recycle Date</span>
+                    <span class="info-value">{{ searchResult.NextRecycleDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Assigned To User</span>
+                    <span class="info-value">{{ searchResult.AssignedToUserID || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'In-Stock'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge instock-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Months In Use</span>
+                    <span class="info-value">{{ searchResult.MonthsInUse || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Next Recycle Date</span>
+                    <span class="info-value">{{ searchResult.NextRecycleDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Assigned To User</span>
+                    <span class="info-value">{{ searchResult.AssignedToUserID || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'Allocated'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge allocated-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Assigned UserID</span>
+                    <span class="info-value">{{ searchResult.AssignedToUserIDString || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ searchResult.Email || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Username</span>
+                    <span class="info-value">{{ searchResult.Username || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Mobile Number</span>
+                    <span class="info-value">{{ searchResult.PhoneNumber || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">{{ searchResult.Location || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Reporting Manager</span>
+                    <span class="info-value">{{ searchResult.ReportingManager || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'Repair'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge repair-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Vendor</span>
+                    <span class="info-value">{{ searchResult.Vendor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sent Date</span>
+                    <span class="info-value">{{ searchResult.SentDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Receive Date</span>
+                    <span class="info-value">{{ searchResult.ReceiveDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Repair Cost</span>
+                    <span class="info-value">{{ searchResult.Repair_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Repair Status</span>
+                    <span class="info-value">{{ searchResult.RepairStatus || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tracking</span>
+                    <span class="info-value">{{ searchResult.Tracking || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Repair Notes</span>
+                    <span class="info-value">{{ searchResult.RepairNotes || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Delivered By</span>
+                    <span class="info-value">{{ searchResult.DeliveredBy || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'Damaged'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge damaged-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Damaged Notes</span>
+                    <span class="info-value">{{ searchResult.DamagedNotes || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'Sold'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge sold-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Months In Use</span>
+                    <span class="info-value">{{ searchResult.MonthsInUse || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Next Recycle Date</span>
+                    <span class="info-value">{{ searchResult.NextRecycleDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sold Cost</span>
+                    <span class="info-value">{{ searchResult.Sold_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sold Year</span>
+                    <span class="info-value">{{ searchResult.Sold_Year || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sold Notes</span>
+                    <span class="info-value">{{ searchResult.SoldNotes || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sold To</span>
+                    <span class="info-value">{{ searchResult.SoldTo || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Approvals</span>
+                    <span class="info-value">{{ searchResult.Approvals || 'N/A' }}</span>
+                </div>
+            </div>
+            <div *ngIf="searchResult.Status == 'E-Waste'" class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Asset Type</span>
+                    <span class="info-value">{{ searchResult.AssetType || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Make</span>
+                    <span class="info-value">{{ searchResult.Make || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ searchResult.Model || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge ewaste-badge">{{ searchResult.Status }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RAM</span>
+                    <span class="info-value">{{ searchResult.RAM || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Processor</span>
+                    <span class="info-value">{{ searchResult.Processor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">OS</span>
+                    <span class="info-value">{{ searchResult.OS || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serial Number</span>
+                    <span class="info-value">{{ searchResult.Serial_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">IMEI Number</span>
+                    <span class="info-value">{{ searchResult.IMEI_Number || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Cost</span>
+                    <span class="info-value">{{ searchResult.Purchase_Cost || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Purchase Year</span>
+                    <span class="info-value">{{ (searchResult.Purchase_Year === '0001-01-01T00:00:00') ? 'N/A' : searchResult.Purchase_Year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Months In Use</span>
+                    <span class="info-value">{{ searchResult.MonthsInUse || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Next Recycle Date</span>
+                    <span class="info-value">{{ searchResult.NextRecycleDate || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">EWaste Vendor</span>
+                    <span class="info-value">{{ searchResult.EWaste_Vendor || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">EWaste Notes</span>
+                    <span class="info-value">{{ searchResult.EWasteNotes || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">EWaste Approvals</span>
+                    <span class="info-value">{{ searchResult.EWasteApprovals || 'N/A' }}</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showEmpDiv" class="employee-results">
+            <div class="table-card">
+                <h2 class="table-title">Employee Assets</h2>
+                <div class="table-wrapper">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>EmployeeID</th>
+                                <th>AssetID</th>
+                                <th>Asset Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="pagedData.length; else noData">
+                            <ng-container *ngFor="let row of pagedData; let i = index">
+                                <tr (click)="toggleExpansion($event, i)" [class.expanded-row]="row.expanded" class="table-row">
+                                    <td>{{ row.AssignedToUserID }}</td>
+                                    <td>{{ row.AssetID }}</td>
+                                    <td>{{ row.AssetType }}</td>
+                                    <td>
+                                        <span class="status-badge allocated-badge">{{ row.Status }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="expandable-row" *ngIf="row.expanded">
+                                    <td colspan="4">
+                                        <div class="expanded-content">
+                                            <div class="expanded-grid">
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Make</span>
+                                                    <span class="expanded-value">{{ row.Make || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Processor</span>
+                                                    <span class="expanded-value">{{ row.Processor || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">RAM</span>
+                                                    <span class="expanded-value">{{ row.RAM || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Serial Number</span>
+                                                    <span class="expanded-value">{{ row.Serial_Number || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Email</span>
+                                                    <span class="expanded-value">{{ row.Email || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Username</span>
+                                                    <span class="expanded-value">{{ row.Username || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Location</span>
+                                                    <span class="expanded-value">{{ row.Location || 'N/A' }}</span>
+                                                </div>
+                                                <div class="expanded-item">
+                                                    <span class="expanded-label">Reporting Manager</span>
+                                                    <span class="expanded-value">{{ row.ReportingManager || 'N/A' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <mat-paginator *ngIf="rowData.length" 
+                               [pageSizeOptions]="[5, 10, 25, 100]" 
+                               [pageSize]="pageSize"
+                               [length]="rowData.length" 
+                               (page)="onPageChange($event)"></mat-paginator>
+                <ng-template #noData>
+                    <div class="no-data-message">
+                        <i class="fas fa-inbox"></i>
+                        <p>No Assets Found</p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

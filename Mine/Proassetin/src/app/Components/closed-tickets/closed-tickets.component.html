@@ -1,0 +1,163 @@
+<div class="spinner-container" *ngIf="isSpinnerVisible">
+    <div class="cssload-loader">
+        <div class="cssload-inner cssload-one"></div>
+        <div class="cssload-inner cssload-two"></div>
+        <div class="cssload-inner cssload-three"></div>
+    </div>
+</div>
+
+<div style="width: 100%; padding: 10px;">
+    <h1><b>Closed Tickets</b></h1>
+</div>
+<div>
+    <div>
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th class="thSty">ID</th>
+                    <th class="thSty">Title</th>
+                    <th class="thSty">Priority</th>
+                    <th class="thSty">Assigned To</th>
+                    <th class="thSty">State</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of pagedData" (click)="ticketView(employee.TaskID)">
+                <td>
+                  <span>{{ employee.TaskID }}</span>
+                </td>
+                <td>
+                    <span>{{ employee.TaskTitle }}</span>
+                </td>
+                <td>
+                    <span>{{ employee.Priority }}</span>
+                </td>
+                <td>
+                    <span>{{ employee.TaskAssignedToName }}</span>
+                </td>
+                <td>
+                    <span class="badge badge-success rounded-pill d-inline">{{ employee.TaskState }}</span>
+                </td>
+              </tr>
+            </tbody>
+            <ng-template #noRecords>
+                <tr>
+                  <td style="padding: 1%; font-weight: 600; font-size: 18px;" colspan="5" class="text-center">No Records Found</td>
+                </tr>
+              </ng-template>
+          </table>
+          <mat-paginator *ngIf="ticketData.length" [pageSizeOptions]="[7, 10, 25, 100]" [pageSize]="pageSize"
+                        [length]="ticketData.length" (page)="onPageChange($event)"></mat-paginator>
+    </div>
+</div>
+
+<ng-template #onTicketPopUp>
+    <div class="ticketPopupDiv">
+        <div class="tickPopUpInner">
+            <div class="tickInner">
+                <span> <i class="fa-solid fa-clipboard-list" style="color: #f2cb1d;"></i> TASK {{ ticketDatabyID[0]?.TaskID }}</span>
+                <mdb-form-control class="titleForm">
+                    <span class="taskIDFont">{{ ticketDatabyID[0]?.TaskID }}</span>
+                    <input mdbInput type="text" id="form1" placeholder="&lt;Enter title here&gt;"
+                        class="form-control"  [(ngModel)]="ticketModel.title"/>
+                </mdb-form-control>
+                <div class="ticketDropdownUser">
+                    <div class="assignDiv">
+                    <mat-form-field class="example-full-width">
+                        <mat-label><i class="fa-solid fa-user-large"></i> &nbsp;Unassigned</mat-label>
+                        <input type="text" #inputField placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                            [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Username">
+                                <i class="fa-solid fa-user-large"></i> &nbsp;{{ option.Username }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                    <div class="taskMod">
+                        <span>Updated on <ng-container *ngIf="ticketDatabyID[0]?.TaskModifiedDate; else createdDate">
+                            {{ ticketDatabyID[0]?.TaskModifiedDate | date:'dd/MM/yyyy' }}
+                          </ng-container>
+                          <ng-template #createdDate>
+                            {{ ticketDatabyID[0]?.TaskCreatedDate | date:'dd/MM/yyyy' }}
+                          </ng-template></span>
+                        <button class="btn btn-primary saveBtn" (click)="updateTicket(ticketDatabyID[0]?.TaskID)"> 
+                            <i class="fa-solid fa-floppy-disk"></i>&nbsp;Save</button>
+                                <button class="btn btn-primary closeBtn" (click)="onTicketClose()">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stateDropDown">
+            <p>State
+                <mat-form-field>
+                    <mat-label>Select an option</mat-label>
+                    <mat-select [(ngModel)]="ticketModel.state">
+                        <mat-option value="Open"><i class="fas fa-circle open_color"></i> &nbsp;To Do</mat-option>
+                        <mat-option value="In Progress"><i class="fas fa-circle cold_color"></i> &nbsp;In Progress</mat-option>
+                        <mat-option value="Done"><i class="fas fa-circle done_color"></i> &nbsp;Done</mat-option>
+                        <mat-option value="Rejected"><i class="fas fa-circle closed_color"></i> &nbsp;Rejected</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </p>
+        </div>
+        <div class="ticketContainer">
+            <div class="accDivs">
+                <div class="accDivsInner">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDes" (opened)="panelOpenStateDes = true" (closed)="panelOpenStateDes = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Description
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.description"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <br>
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDis" (opened)="panelOpenStateDis = true" (closed)="panelOpenStateDis = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Discussion
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.discussion"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div class="detAcc">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDet" (opened)="panelOpenStateDet = true" (closed)="panelOpenStateDet = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Priority</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.priority">
+                              </mat-form-field>
+                              <br>
+                              <br>
+                              <mat-form-field class="graphDiv">
+                                <mat-label>Remaining Work</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.remainingWork">
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #childPopUp>
+        <!-- Child pop-up content here -->
+        <h1>Hello</h1>
+    </ng-template>
+</ng-template>

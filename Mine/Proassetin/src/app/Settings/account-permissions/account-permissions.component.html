@@ -1,0 +1,75 @@
+<div style="width: 100%; padding: 10px;">
+    <h1><b>Account Roles</b></h1>
+    <hr>
+    <div>
+        
+        <div style="width: 100%; background-color: #32353c; color: white; display: flex; padding: 1%; align-items: center; gap: 10px; justify-content: space-between;">
+        <span>End Users</span>
+        <!-- <div style="flex: 1; display: flex; justify-content: flex-start; gap: 10px;">
+        <button class="btn btn-secondary" (click)="filterByRole('All')">All</button>
+        <button class="btn btn-outline-primary" (click)="filterByRole('SuperAdmin')"><span style="font-weight: 500;">Super Admin</span></button>
+        <button class="btn btn-outline-success" (click)="filterByRole('Admin')"><span style="font-weight: 500;">Admin</span></button>
+        <button class="btn btn-outline-warning" (click)="filterByRole('Monitoring')"><span style="font-weight: 500;">Monitoring</span></button>
+        <button class="btn btn-outline-warning" (click)="filterByRole('QC')"><span style="font-weight: 500;">QC</span></button>
+        <button class="btn btn-outline-info" (click)="filterByRole('EndUser')"><span style="font-weight: 500;">End User</span></button> -->
+      <!-- </div> -->
+        <button class="btn btn-primary" style="justify-content: end;" (click)="refresh()"><span style="font-weight: 400; margin-left: auto;">Refresh <i class="fa-solid fa-arrows-rotate" style="color: #ffffff; font-style: normal;"></i></span></button>
+    </div>
+<table class="table align-middle mb-0 bg-white">
+    <tbody *ngIf="pagedData.length > 0; else noRecords">
+      <tr *ngFor="let employee of pagedData">
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="ms-3">
+              <p class="fw-bold mb-1">{{ employee.Username }}</p>
+              <p class="text-muted mb-0">{{ employee.Email }}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{ employee.ReportingManager }}</p>
+          <p class="text-muted mb-0">{{ employee.Team }}</p>
+        </td>
+        <td class="tdSty">
+          <span class="fw-normal mb-1"><button [ngStyle]="getCellStyle(employee.Role)">{{ employee.Role }}</button></span>
+        </td>
+        <td class="tdSty">
+          <button type="button" class="btn btn-link btn-sm btn-rounded" (click)="openDialog(employee)">
+            Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <ng-template #noRecords>
+        <tr>
+          <td style="padding: 1%; font-weight: 600; font-size: 18px;" colspan="4" class="text-center">No Records Found</td>
+        </tr>
+      </ng-template>
+  </table>
+  <mat-paginator *ngIf="employeeDetailsList.length" [pageSizeOptions]="[7, 10, 25, 100]" [pageSize]="pageSize"
+                [length]="employeeDetailsList.length" (page)="onPageChange($event)"></mat-paginator>
+
+    </div>
+</div>
+
+<ng-template #RoleChange>
+    <div style="padding: 1%;">
+        <h2 style="border-bottom: 1px solid rgb(194, 194, 194);">Change Role</h2>
+    </div>
+    <div style="padding: 1%; padding-left:2%; display: flex; align-items: center;">
+        <span>Role:</span>
+        <select type="text" class="form-control inpWid" id="Role" [(ngModel)]="changeRole" required>
+                    <option selected disabled>Select</option>
+                    <option value="Owner">Owner</option>
+                    <option value="SuperAdmin">Super Admin</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Monitoring">Monitoring</option>
+                    <option value="QC">QC</option>
+                    <option value="EndUser">EndUser</option>
+                </select>
+    </div>
+    <div class="btnsDiv" style="padding: 1%;">
+        <button class="nxtBtn" mat-button (click)="saveChanges()">Save</button>
+        <button class="nxtBtnR" mat-button (click)="onCancelClick()">Cancel</button>
+    </div>
+</ng-template>

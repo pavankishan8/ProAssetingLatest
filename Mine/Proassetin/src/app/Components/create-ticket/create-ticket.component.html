@@ -1,0 +1,93 @@
+<div style="width: 100%; padding: 10px;">
+    <div>
+        <div
+            style="border-left:10px solid orange; border-right: 1px solid rgb(225, 225, 225); border-top: 1px solid rgb(225, 225, 225); border-bottom: 1px solid rgb(225, 225, 225);">
+            <div style="display: grid; margin-left: 1%; margin-right: 1%;">
+                <span> <i class="fa-solid fa-clipboard-list" style="color: #f2cb1d;"></i> NEW TICKET</span>
+                <mdb-form-control style="margin-top: 0.5%;">
+                    <input mdbInput type="text" id="form1" placeholder="&lt;Enter title here&gt;"
+                        class="form-control"  [(ngModel)]="ticketModel.title"/>
+                </mdb-form-control>
+                <div
+                    style="width: 100%;margin-top: 0.5%; margin-bottom: 1%; display: flex;align-items: center; justify-content: space-between;">
+                    <mat-form-field class="example-full-width">
+                        <mat-label><i class="fa-solid fa-user-large"></i> &nbsp;Unassigned</mat-label>
+                        <input type="text" #inputField placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl"
+                            [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Username">
+                                <i class="fa-solid fa-user-large"></i> &nbsp;{{ option.Username }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <button class="btn btn-primary" style="border-radius: 0px;" (click)="saveTicket()"> <i
+                            class="fa-solid fa-floppy-disk"></i>&nbsp;Save & Clear</button>
+                </div>
+            </div>
+        </div>
+        <div style="background-color: #f8f8f8; padding: 1%;">
+            <p>State
+                <mat-form-field>
+                    <mat-label>Select an option</mat-label>
+                    <mat-select [(ngModel)]="ticketModel.state">
+                        <mat-option value="To Do"><i class="fas fa-circle open_color"></i> &nbsp;To Do</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </p>
+        </div>
+        <div style="padding: 1%;">
+            <div style="width: 100%; display: flex; gap: 2%;">
+                <div style="width: 60%;">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDes" (opened)="panelOpenStateDes = true" (closed)="panelOpenStateDes = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Description
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.description"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <br>
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDis" (opened)="panelOpenStateDis = true" (closed)="panelOpenStateDis = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Discussion
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.discussion"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div style="width: 40%;">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDet" (opened)="panelOpenStateDet = true" (closed)="panelOpenStateDet = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Priority</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.priority">
+                              </mat-form-field>
+                              <br>
+                              <br>
+                              <mat-form-field style="width: 100%;">
+                                <mat-label>Remaining Work</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.remainingWork">
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

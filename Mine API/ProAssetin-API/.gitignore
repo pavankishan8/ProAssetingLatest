@@ -1,0 +1,15 @@
+# Ignore v15 server\sqlite3 folder
+v15 server\sqlite3/
+
+# Ignore .suo files
+*.suo
+
+# Ignore bin and obj directories
+bin/
+obj/
+
+# Ignore compiled DLL and PDB files
+*.dll
+*.pdb
+
+.vs/

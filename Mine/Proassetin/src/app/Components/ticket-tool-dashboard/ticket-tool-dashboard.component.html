@@ -1,0 +1,299 @@
+<div class="ticket-dashboard-container">
+    <h1 class="page-title">Ticket Management Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="card-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Total Tickets</h3>
+                <p class="card-value">{{ totalRecords }}</p>
+            </div>
+        </div>
+        <div class="stat-card open">
+            <div class="card-icon">
+                <i class="fas fa-circle-notch"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Open Tickets</h3>
+                <p class="card-value">{{ openCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card in-progress">
+            <div class="card-icon">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">In-Progress</h3>
+                <p class="card-value">{{ inProgressCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card closed">
+            <div class="card-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Closed Tickets</h3>
+                <p class="card-value">{{ closedCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card reopened">
+            <div class="card-icon">
+                <i class="fas fa-redo"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Reopened</h3>
+                <p class="card-value">{{ reopenedCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card rejected">
+            <div class="card-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Rejected</h3>
+                <p class="card-value">{{ rejectedCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card pending">
+            <div class="card-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Pending</h3>
+                <p class="card-value">{{ pendingCount }}</p>
+            </div>
+        </div>
+        <div class="stat-card tickets">
+            <div class="card-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Tickets</h3>
+                <p class="card-value">{{ ticketsCount }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <div class="content-left">
+            <div class="ticket-card">
+                <div *ngIf="ticketData && ticketData.length > 0" class="ticket-section">
+                    <div class="ticket-header">
+                        <div class="ticket-header-info">
+                            <i class="fas fa-clipboard-list"></i>
+                            <div>
+                                <h3>Tickets assigned to {{ fullName }}</h3>
+                                <p class="ticket-count">{{ ticketData.length }} Ticket{{ ticketData.length !== 1 ? 's' : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ticket-table-wrapper">
+                        <table class="modern-ticket-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" (click)="sortByState()">
+                                        <span>State</span>
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" (click)="sortByTitle()">
+                                        <span>Title</span>
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let ticket of ticketData">
+                                    <tr *ngIf="ticket.TaskState !== 'Done'" class="ticket-row" (click)="ticketView(ticket.TaskID)">
+                                        <td>
+                                            <span class="state-indicator">
+                                                <i [class]="getTaskStateClass(ticket.TaskState)"></i>
+                                                <span>{{ ticket.TaskState }}</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="ticket-title">
+                                                <i class="fas fa-clipboard-list"></i>
+                                                <span>{{ ticket.TaskTitle }}</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div *ngIf="!ticketData || ticketData.length === 0" class="empty-state">
+                    <i class="fas fa-check-circle"></i>
+                    <p>You are all caught up.</p>
+                    <span>No pending tickets assigned to you</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-right">
+            <div class="chart-card" (mouseenter)="showButton()" (mouseleave)="hideButton()">
+                <div class="chart-header">
+                    <h3>Total Tickets by Assigned To</h3>
+                    <button class="expand-btn" (click)="onGraphExp()" title="Expand Chart">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="horizontalBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #onGraphPopUp>
+    <div class="graph-dialog">
+        <div class="dialog-header">
+            <h2>Total Tickets by Assigned To</h2>
+            <button class="close-dialog-btn" (click)="onGraphClose()" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="dialog-chart-container">
+            <canvas id="BarChart"></canvas>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #onTicketPopUp>
+    <div class="ticket-dialog">
+        <div class="dialog-header-section">
+            <div class="task-header">
+                <div class="task-id-section">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="task-id-label">TASK {{ ticketDatabyID[0]?.TaskID }}</span>
+                </div>
+                <div class="title-input-section">
+                    <input type="text" 
+                           class="title-input" 
+                           placeholder="Enter title here"
+                           [(ngModel)]="ticketModel.title"/>
+                </div>
+            </div>
+            <div class="assign-section">
+                <div class="assign-input">
+                    <mat-form-field class="assign-field">
+                        <mat-label><i class="fas fa-user"></i> Assign To</mat-label>
+                        <input type="text" 
+                               #inputField 
+                               placeholder="Select employee" 
+                               matInput 
+                               [formControl]="myControl"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.Username">
+                                <i class="fas fa-user"></i> {{ option.Username }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div class="dialog-actions">
+                    <span class="update-date">
+                        Updated on 
+                        <ng-container *ngIf="ticketDatabyID[0]?.TaskModifiedDate; else createdDate">
+                            {{ ticketDatabyID[0]?.TaskModifiedDate | date:'dd/MM/yyyy' }}
+                        </ng-container>
+                        <ng-template #createdDate>
+                            {{ ticketDatabyID[0]?.TaskCreatedDate | date:'dd/MM/yyyy' }}
+                        </ng-template>
+                    </span>
+                    <button class="save-btn" (click)="updateTicket(ticketDatabyID[0]?.TaskID)">
+                        <i class="fas fa-save"></i>
+                        <span>Save</span>
+                    </button>
+                    <button class="close-dialog-btn" (click)="onTicketClose()" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="state-section">
+            <label class="state-label">State</label>
+            <mat-form-field class="state-field">
+                <mat-label>Select State</mat-label>
+                <mat-select [(ngModel)]="ticketModel.state">
+                    <mat-option value="Open">
+                        <i class="fas fa-circle open_color"></i> To Do
+                    </mat-option>
+                    <mat-option value="In Progress">
+                        <i class="fas fa-circle cold_color"></i> In Progress
+                    </mat-option>
+                    <mat-option value="Done">
+                        <i class="fas fa-circle done_color"></i> Done
+                    </mat-option>
+                    <mat-option value="Rejected">
+                        <i class="fas fa-circle closed_color"></i> Rejected
+                    </mat-option>
+                    <mat-option value="Pending">
+                        <i class="fas fa-circle warning_color"></i> Pending
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="ticketContainer">
+            <div class="accDivs">
+                <div class="accDivsInner">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDes" (opened)="panelOpenStateDes = true" (closed)="panelOpenStateDes = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Description
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.description"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <br>
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDis" (opened)="panelOpenStateDis = true" (closed)="panelOpenStateDis = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Discussion
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Textarea</mat-label>
+                                <textarea matInput [(ngModel)]="ticketModel.discussion"></textarea>
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div class="detAcc">
+                    <mat-accordion>
+                        <mat-expansion-panel [(expanded)]="panelOpenStateDet" (opened)="panelOpenStateDet = true" (closed)="panelOpenStateDet = false">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Details
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field class="graphDiv">
+                                <mat-label>Priority</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.priority">
+                              </mat-form-field>
+                              <br>
+                              <br>
+                              <mat-form-field class="graphDiv">
+                                <mat-label>Remaining Work</mat-label>
+                                <input matInput [(ngModel)]="ticketModel.remainingWork">
+                              </mat-form-field>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #childPopUp>
+        <!-- Child pop-up content here -->
+        <h1>Hello</h1>
+    </ng-template>
+</ng-template>

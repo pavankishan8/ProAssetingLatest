@@ -1,0 +1,404 @@
+<div class="asset-create-container">
+    <div class="action-buttons">
+        <button class="action-btn create-btn" [class.active]="ifManCre" (click)="manCreate()">
+            <i class="fas fa-plus-circle"></i>
+            <span>Create Manually</span>
+        </button>
+        <button class="action-btn upload-btn" [class.active]="ifUpload" (click)="onUpload()">
+            <i class="fas fa-upload"></i>
+            <span>Upload Excel</span>
+        </button>
+    </div>
+    <div *ngIf="ifManCre" class="form-section">
+        <div class="form-card">
+            <div class="status-selector">
+                <label class="field-label">Asset Status</label>
+                <div class="custom-dropdown" [class.open]="isStatusDropdownOpen" #statusDropdown>
+                    <div class="dropdown-header" (click)="toggleStatusDropdown()">
+                        <span class="dropdown-label">{{ formData.Status || 'Select Status' }}</span>
+                        <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isStatusDropdownOpen"></i>
+                    </div>
+                    <div class="dropdown-menu" *ngIf="isStatusDropdownOpen" (click)="$event.stopPropagation()">
+                        <div class="dropdown-item" 
+                             *ngFor="let item of items" 
+                             [class.active]="formData.Status === item.value"
+                             (click)="selectStatus(item.value); $event.stopPropagation()">
+                            <span>{{ item.viewValue }}</span>
+                            <i class="fas fa-check" *ngIf="formData.Status === item.value"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="formData.Status === 'In-Stock'" class="form-fields">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Asset Type</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssetType" placeholder="Enter Asset Type">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Make</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Make" placeholder="Enter Make">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Model" placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RAM</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RAM" placeholder="Enter RAM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Processor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Processor" placeholder="Enter Processor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.OS" placeholder="Enter OS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Serial_Number" placeholder="Enter Serial Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMEI Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.IMEI_Number" placeholder="Enter IMEI Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Cost" placeholder="Enter Purchase Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Year" placeholder="Enter Purchase Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Months In Use</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.MonthsInUse" placeholder="Enter Months in Use">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Next Recycle Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.NextRecycleDate" placeholder="Enter Next Recycle Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Assigned To User ID</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssignedToUserID" placeholder="Enter User ID (Optional)">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="formData.Status === 'Repair'" class="form-fields">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Asset Type</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssetType" placeholder="Enter Asset Type">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Make</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Make" placeholder="Enter Make">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Model" placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RAM</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RAM" placeholder="Enter RAM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Processor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Processor" placeholder="Enter Processor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.OS" placeholder="Enter OS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Serial_Number" placeholder="Enter Serial Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMEI Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.IMEI_Number" placeholder="Enter IMEI Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Cost" placeholder="Enter Purchase Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Year" placeholder="Enter Purchase Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Months In Use</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.MonthsInUse" placeholder="Enter Months in Use">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Next Recycle Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.NextRecycleDate" placeholder="Enter Next Recycle Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vendor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Vendor" placeholder="Enter Vendor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sent Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.SentDate" placeholder="Enter Sent Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Receive Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.ReceiveDate" placeholder="Enter Receive Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Repair Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Repair_Cost" placeholder="Enter Repair Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Repair Status</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RepairStatus" placeholder="Enter Repair Status">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tracking</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Tracking" placeholder="Enter Tracking">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Repair Notes</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RepairNotes" placeholder="Enter Repair Notes">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Delivered By</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.DeliveredBy" placeholder="Enter Delivered By">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="formData.Status === 'Sold'" class="form-fields">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Asset Type</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssetType" placeholder="Enter Asset Type">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Make</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Make" placeholder="Enter Make">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Model" placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RAM</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RAM" placeholder="Enter RAM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Processor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Processor" placeholder="Enter Processor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.OS" placeholder="Enter OS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Serial_Number" placeholder="Enter Serial Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMEI Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.IMEI_Number" placeholder="Enter IMEI Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Months In Use</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.MonthsInUse" placeholder="Enter Months in Use">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Cost" placeholder="Enter Purchase Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Next Recycle Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.NextRecycleDate" placeholder="Enter Next Recycle Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sold Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Sold_Cost" placeholder="Enter Sold Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Year" placeholder="Enter Purchase Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sold Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Sold_Year" placeholder="Enter Sold Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sold Notes</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.SoldNotes" placeholder="Enter Sold Notes">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sold To</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.SoldTo" placeholder="Enter Sold To">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Approvals</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Approvals" placeholder="Enter Approvals">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="formData.Status === 'Damaged'" class="form-fields">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Asset Type</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssetType" placeholder="Enter Asset Type">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Make</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Make" placeholder="Enter Make">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Model" placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RAM</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RAM" placeholder="Enter RAM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Processor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Processor" placeholder="Enter Processor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.OS" placeholder="Enter OS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Serial_Number" placeholder="Enter Serial Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMEI Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.IMEI_Number" placeholder="Enter IMEI Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Months In Use</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.MonthsInUse" placeholder="Enter Months in Use">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Next Recycle Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.NextRecycleDate" placeholder="Enter Next Recycle Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Cost</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Cost" placeholder="Enter Purchase Cost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Year" placeholder="Enter Purchase Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Damaged Notes</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.DamagedNotes" placeholder="Enter Damaged Notes">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="formData.Status === 'E-Waste'" class="form-fields">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Asset Type</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.AssetType" placeholder="Enter Asset Type">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Make</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Make" placeholder="Enter Make">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Model" placeholder="Enter Model">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RAM</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.RAM" placeholder="Enter RAM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Processor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Processor" placeholder="Enter Processor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Operating System</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.OS" placeholder="Enter OS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Serial_Number" placeholder="Enter Serial Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IMEI Number</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.IMEI_Number" placeholder="Enter IMEI Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Months In Use</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.MonthsInUse" placeholder="Enter Months in Use">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Next Recycle Date</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.NextRecycleDate" placeholder="Enter Next Recycle Date">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purchase Year</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.Purchase_Year" placeholder="Enter Purchase Year">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-Waste Vendor</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.EWaste_Vendor" placeholder="Enter Vendor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-Waste Notes</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.EWasteNotes" placeholder="Enter E-Waste Notes">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">E-Waste Approvals</label>
+                        <input type="text" class="form-input" [(ngModel)]="formData.EWasteApprovals" placeholder="Enter Approvals">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions" *ngIf="formData.Status">
+                <button class="submit-btn" (click)="onSubmit()">
+                    <i class="fas fa-check"></i>
+                    <span>Create Asset</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="ifUpload" class="upload-section">
+        <div class="upload-card">
+            <div class="upload-header">
+                <i class="fas fa-file-excel"></i>
+                <h2>Upload Excel File</h2>
+                <p class="upload-subtitle">Select an Excel file (.xlsx) to import multiple assets</p>
+            </div>
+            <div class="upload-area">
+                <input accept=".xlsx" 
+                       class="file-input" 
+                       name="arquivo" 
+                       id="arquivo" 
+                       type="file" 
+                       #arquivo
+                       (change)="onFileSelected($event)">
+                <div class="upload-placeholder" (click)="arquivo.click()">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="upload-text">Click to select file or drag and drop</p>
+                    <p class="upload-hint">Excel files only (.xlsx)</p>
+                </div>
+                <div *ngIf="selectedFileName" class="selected-file">
+                    <i class="fas fa-file-excel"></i>
+                    <span class="file-name">{{ selectedFileName }}</span>
+                    <button class="remove-file-btn" (click)="clearFile()" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="upload-actions">
+                <button class="upload-submit-btn" (click)="onFileUpload()" [disabled]="!selectedFileName">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload & Create Assets</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

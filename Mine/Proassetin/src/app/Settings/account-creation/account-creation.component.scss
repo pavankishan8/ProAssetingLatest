@@ -1,0 +1,74 @@
+.creaDiv{
+    width: 100%; 
+    padding: 10px;
+}
+
+.compDiv{
+    border: 2px solid rgb(232, 232, 232); 
+    border-radius: 10px; 
+    padding: 1%;
+}
+
+.cmpInp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.empDiv{
+    border: 2px solid rgb(232, 232, 232); 
+    border-radius: 10px; 
+    padding: 1%;
+}
+
+.inpWid{
+    width: 65%;
+}
+
+.inpWidN{
+    gap: 10px;
+    width: 49%;
+}
+
+.nameDivs{
+    display: flex; 
+    width: 65%; 
+    justify-content: space-between;
+}
+
+.rstBtn{
+    float: right;
+    margin-right: 1%;
+  }
+  
+  .regBtn{
+    background-color: #007eff; 
+    color: white !important; 
+    float: right;
+  }
+
+  .conBtn{
+    background-color: #007eff; 
+    color: white !important; 
+  }
+
+  .weak {
+    color: #d9534f; /* Bootstrap's danger/red color */
+  }
+  
+  .moderate {
+    color: #f0ad4e; /* Bootstrap's warning/yellow color */
+  }
+  
+  .strong {
+    color: #0fcc13; /* Bootstrap's info/blue color */
+  }
+
+  .fontSty{
+    font-size: 16px;
+  }
+
+  .spanCol{
+    color: red;
+  }

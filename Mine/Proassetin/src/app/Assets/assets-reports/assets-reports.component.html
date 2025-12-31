@@ -1,0 +1,329 @@
+<div class="reports-container">
+    <h1 class="page-title">Asset Reports</h1>
+    
+    <div class="filters-section">
+        <div class="filter-group">
+            <label class="filter-label">Asset Status</label>
+            <div class="custom-dropdown" [class.open]="isDropdownOpen" #dropdownContainer>
+                <div class="dropdown-header" (click)="toggleDropdown()">
+                    <span class="dropdown-label">{{ selectedItem ? getSelectedLabel() : 'Select Asset Status' }}</span>
+                    <i class="fas fa-chevron-down dropdown-arrow" [class.rotated]="isDropdownOpen"></i>
+                </div>
+                <div class="dropdown-menu" *ngIf="isDropdownOpen" (click)="$event.stopPropagation()">
+                    <div class="dropdown-item"
+                         *ngFor="let item of items; trackBy: trackByValue"
+                         [class.active]="selectedItem === item.value"
+                         (click)="selectItem(item.value); $event.stopPropagation()">
+                        <span>{{ item.viewValue }}</span>
+                        <i class="fas fa-check" *ngIf="selectedItem === item.value"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-group">
+            <label class="filter-label">Date Range</label>
+            <mat-form-field class="date-range-field">
+                <mat-label>Select Date Range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+        
+        <div class="filter-group">
+            <button class="search-btn" (click)="onSearch()">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading report data...</p>
+    </div>
+
+    <div *ngIf="!loading && selectedItem" class="reports-content">
+        <div class="download-actions">
+            <button class="download-btn csv-btn" (click)="downloadTableCSV()">
+                <i class="fas fa-file-csv"></i>
+                <span>Download CSV</span>
+            </button>
+            <button class="download-btn pdf-btn" (click)="downloadTablePDF()">
+                <i class="fas fa-file-pdf"></i>
+                <span>Download PDF</span>
+            </button>
+        </div>
+
+        <div *ngIf="selectedItem === 'In-Stock'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Status</th>
+                            <th>RAM</th>
+                            <th>Processor</th>
+                            <th>OS</th>
+                            <th>Serial Number</th>
+                            <th>IMEI Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span>
+                            </td>
+                            <td>
+                                <span class="status-badge instock-badge">{{ item.Status }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'RAM: ' + item.RAM }}">{{ item.RAM }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'Processor: ' + item.Processor }}">{{ item.Processor }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'OS: ' + item.OS }}">{{ item.OS }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'SN: ' + item.Serial_Number }}">{{ item.Serial_Number }}</span>
+                            </td>
+                            <td>
+                                <span matTooltip="{{ 'IMEI: ' + item.IMEI_Number }}">{{ item.IMEI_Number }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="selectedItem === 'Allocated'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Processor</th>
+                            <th>RAM</th>
+                            <th>Status</th>
+                            <th>Serial Number</th>
+                            <th>Assigned To User</th>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Mobile Number</th>
+                            <th>Location</th>
+                            <th>Reporting Manager</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td><span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span></td>
+                            <td><span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span></td>
+                            <td><span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span></td>
+                            <td><span matTooltip="{{ 'Processor: ' + item.Processor }}">{{ item.Processor }}</span></td>
+                            <td><span matTooltip="{{ 'RAM: ' + item.RAM }}">{{ item.RAM }}</span></td>
+                            <td><span class="status-badge allocated-badge">{{ item.Status }}</span></td>
+                            <td><span matTooltip="{{ 'SN: ' + item.Serial_Number }}">{{ item.Serial_Number }}</span></td>
+                            <td><span matTooltip="{{ 'UserID: ' + item.AssignedToUserID }}">{{ item.AssignedToUserID }}</span></td>
+                            <td><span matTooltip="{{ 'Email: ' + item.Email }}">{{ item.Email }}</span></td>
+                            <td><span matTooltip="{{ 'UserName: ' + item.Username }}">{{ item.Username }}</span></td>
+                            <td><span matTooltip="{{ 'Phone Number: ' + item.PhoneNumber }}">{{ item.PhoneNumber }}</span></td>
+                            <td><span matTooltip="{{ 'Location: ' + item.Location }}">{{ item.Location }}</span></td>
+                            <td><span matTooltip="{{ 'Reporting Manager: ' + item.ReportingManager }}">{{ item.ReportingManager }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="selectedItem === 'Repair'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Status</th>
+                            <th>Vendor</th>
+                            <th>Sent Date</th>
+                            <th>Receive Date</th>
+                            <th>Repair Cost</th>
+                            <th>Repair Status</th>
+                            <th>Repair Notes</th>
+                            <th>Tracking</th>
+                            <th>Delivered By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td><span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span></td>
+                            <td><span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span></td>
+                            <td><span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span></td>
+                            <td><span class="status-badge repair-badge">{{ item.Status }}</span></td>
+                            <td><span matTooltip="{{ 'Vendor: ' + item.Vendor }}">{{ item.Vendor }}</span></td>
+                            <td><span matTooltip="{{ 'Sent Date: ' + item.SentDate }}">{{ item.SentDate | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'Receive Date: ' + item.ReceiveDate }}">{{ item.ReceiveDate | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'Repair Cost: ' + item.Repair_Cost }}">{{ item.Repair_Cost }}</span></td>
+                            <td><span class="status-badge" [ngStyle]="getCellStyle(item.RepairStatus)">{{ item.RepairStatus }}</span></td>
+                            <td><span matTooltip="{{ 'Repair Notes: ' + item.RepairNotes }}">{{ item.RepairNotes }}</span></td>
+                            <td><span matTooltip="{{ 'Tracking: ' + item.Tracking }}">{{ item.Tracking }}</span></td>
+                            <td><span matTooltip="{{ 'Delivered By: ' + item.DeliveredBy }}">{{ item.DeliveredBy }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="selectedItem === 'Sold'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Status</th>
+                            <th>Serial Number</th>
+                            <th>Purchase Cost</th>
+                            <th>Sold Cost</th>
+                            <th>Purchase Year</th>
+                            <th>Sold Year</th>
+                            <th>Sold Notes</th>
+                            <th>Sold To</th>
+                            <th>Approvals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td><span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span></td>
+                            <td><span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span></td>
+                            <td><span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span></td>
+                            <td><span class="status-badge sold-badge">{{ item.Status }}</span></td>
+                            <td><span matTooltip="{{ 'SN: ' + item.Serial_Number }}">{{ item.Serial_Number }}</span></td>
+                            <td><span matTooltip="{{ 'Purchase Cost: ' + item.Purchase_Cost }}">{{ item.Purchase_Cost }}</span></td>
+                            <td><span matTooltip="{{ 'Sold Cost: ' + item.Sold_Cost }}">{{ item.Sold_Cost }}</span></td>
+                            <td><span matTooltip="{{ 'Purchase Year: ' + item.Purchase_Year }}">{{ item.Purchase_Year | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'Sold Year: ' + item.Sold_Year }}">{{ item.Sold_Year | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'Sold Notes: ' + item.SoldNotes }}">{{ item.SoldNotes }}</span></td>
+                            <td><span matTooltip="{{ 'Sold To: ' + item.SoldTo }}">{{ item.SoldTo }}</span></td>
+                            <td><span matTooltip="{{ 'Approval: ' + item.Approvals }}">{{ item.Approvals }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="selectedItem === 'Damaged'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Status</th>
+                            <th>Serial Number</th>
+                            <th>Purchase Cost</th>
+                            <th>Purchase Year</th>
+                            <th>Damaged Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td><span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span></td>
+                            <td><span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span></td>
+                            <td><span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span></td>
+                            <td><span class="status-badge damaged-badge">{{ item.Status }}</span></td>
+                            <td><span matTooltip="{{ 'SN: ' + item.Serial_Number }}">{{ item.Serial_Number }}</span></td>
+                            <td><span matTooltip="{{ 'Purchase Cost: ' + item.Purchase_Cost }}">{{ item.Purchase_Cost }}</span></td>
+                            <td><span matTooltip="{{ 'Purchase Year: ' + item.Purchase_Year }}">{{ item.Purchase_Year | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'Damaged Notes: ' + item.DamagedNotes }}">{{ item.DamagedNotes }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="selectedItem === 'E-Waste'" class="table-section">
+            <div class="table-wrapper">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="selectAll" (change)="selectAllItems()"/>
+                            </th>
+                            <th>AssetID</th>
+                            <th>Asset Type</th>
+                            <th>Make</th>
+                            <th>Processor</th>
+                            <th>Status</th>
+                            <th>Serial Number</th>
+                            <th>Purchase Year</th>
+                            <th>EWaste Vendor</th>
+                            <th>EWaste Notes</th>
+                            <th>EWaste Approvals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assetDataapi">
+                            <td class="checkbox-col">
+                                <input type="checkbox" class="checkbox-input" [(ngModel)]="item.selected" (change)="onItemCheckboxChange(item)"/>
+                            </td>
+                            <td><span matTooltip="{{ 'Asset ID: ' + item.AssetID }}">{{ item.AssetID }}</span></td>
+                            <td><span matTooltip="{{ 'Asset: ' + item.AssetType }}">{{ item.AssetType }}</span></td>
+                            <td><span matTooltip="{{ 'Make: ' + item.Make }}">{{ item.Make }}</span></td>
+                            <td><span matTooltip="{{ 'Processor: ' + item.Processor }}">{{ item.Processor }}</span></td>
+                            <td><span class="status-badge ewaste-badge">{{ item.Status }}</span></td>
+                            <td><span matTooltip="{{ 'SN: ' + item.Serial_Number }}">{{ item.Serial_Number }}</span></td>
+                            <td><span matTooltip="{{ 'Purchase Year: ' + item.Purchase_Year }}">{{ item.Purchase_Year | date: 'dd/MM/yyyy'}}</span></td>
+                            <td><span matTooltip="{{ 'E-Waste Vendor: ' + item.EWaste_Vendor }}">{{ item.EWaste_Vendor }}</span></td>
+                            <td><span matTooltip="{{ 'E-Waste Notes: ' + item.EWasteNotes }}">{{ item.EWasteNotes }}</span></td>
+                            <td><span matTooltip="{{ 'E-Waste Approvals: ' + item.EWasteApprovals }}">{{ item.EWasteApprovals }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

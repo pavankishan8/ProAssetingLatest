@@ -1,0 +1,534 @@
+.assets-page-container {
+    width: 100%;
+    padding: 1.5rem 1.5rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.filter-section {
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1000;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    z-index: 1000;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.15);
+    }
+}
+
+.custom-dropdown.open .dropdown-header {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.dropdown-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    color: #6c757d;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.rotated {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 200px;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: visible;
+    z-index: 1001;
+    max-height: 300px;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: #667eea;
+    border-radius: 10px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f1f1;
+    min-height: 40px;
+    box-sizing: border-box;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #667eea;
+    }
+
+    &.active {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    span {
+        flex: 1;
+        display: block;
+    }
+
+    i {
+        font-size: 0.7rem;
+        color: #667eea;
+        margin-left: 0.5rem;
+    }
+}
+
+.table-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.tabScroll {
+    height: calc(100vh - 300px);
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+.tabScroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.tabScroll::-webkit-scrollbar-thumb {
+    background-color: #667eea;
+    border-radius: 10px;
+}
+
+.tabScroll::-webkit-scrollbar-thumb:hover {
+    background-color: #5568d3;
+}
+
+.tabScroll::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    background: white;
+    
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #f8f9fa;
+        
+        th {
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #dee2e6;
+            white-space: nowrap;
+        }
+    }
+    
+    tbody {
+        tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s ease;
+            
+            &:hover {
+                background-color: #f8f9fa;
+            }
+            
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+        
+        td {
+            padding: 0.65rem 0.5rem;
+            color: #495057;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+    }
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.in-stock-badge {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.allocated-badge {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.repair-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+}
+
+.damaged-badge {
+    background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+}
+
+.sold-badge {
+    background: linear-gradient(135deg, #f85280 0%, #e91e63 100%);
+}
+
+.ewaste-badge {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+.action-btn {
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.allocate-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+    }
+}
+
+// Dialog Styles
+.dialog-container {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.dialog-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.dialog-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.info-value {
+    font-size: 0.85rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.search-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.search-field {
+    .field-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    outline: none;
+    transition: all 0.3s ease;
+    
+    &:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+}
+
+.search-btn, .clear-btn {
+    min-width: 40px;
+    height: 38px;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+}
+
+.search-btn {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+    color: white !important;
+}
+
+.clear-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+    color: white !important;
+}
+
+.error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    color: #e74c3c;
+    font-size: 0.7rem;
+    
+    i {
+        font-size: 0.8rem;
+    }
+}
+
+.employee-info {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #e9ecef;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0 0 1rem 0;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 2px solid #e9ecef;
+}
+
+.btn-cancel, .btn-allocate {
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #e9ecef;
+    color: #495057;
+    
+    &:hover {
+        background: #dee2e6;
+    }
+}
+
+.btn-allocate {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+    }
+}
+
+// Dialog Panel Styles
+::ng-deep .fullscreen-dialog {
+    .mat-mdc-dialog-container {
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .assets-page-container {
+        padding: 1rem;
+    }
+    
+    .custom-dropdown {
+        max-width: 100%;
+    }
+    
+    .dropdown-header {
+        padding: 0.65rem 0.9rem;
+    }
+    
+    .dropdown-label {
+        font-size: 0.75rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.65rem 0.9rem;
+        font-size: 0.75rem;
+    }
+    
+    .tabScroll {
+        height: calc(100vh - 250px);
+    }
+    
+    .modern-table {
+        font-size: 0.7rem;
+        
+        thead th {
+            font-size: 0.65rem;
+            padding: 0.5rem 0.35rem;
+        }
+        
+        tbody td {
+            font-size: 0.7rem;
+            padding: 0.5rem 0.35rem;
+            max-width: 120px;
+        }
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dialog-container {
+        padding: 1rem;
+    }
+}

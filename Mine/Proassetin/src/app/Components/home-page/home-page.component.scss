@@ -1,0 +1,320 @@
+.home-container {
+    width: 100%;
+    padding: 1.5rem 1.5rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+
+        &::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .card-icon {
+            transform: scale(1.08) rotate(3deg);
+        }
+    }
+
+    .card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .card-content {
+        flex: 1;
+
+        .card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            margin: 0 0 0.4rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .card-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: #95a5a6;
+            display: block;
+            margin-top: 0.2rem;
+        }
+    }
+}
+
+// Card Color Themes
+.total-assets {
+    &::before {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+}
+
+.active-assets {
+    &::before {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+}
+
+.in-stock {
+    &::before {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    }
+}
+
+.allocated {
+    &::before {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+}
+
+.pending-tickets {
+    &::before {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+}
+
+.repair {
+    &::before {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    }
+}
+
+.damaged {
+    &::before {
+        background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+    }
+}
+
+.total-tickets {
+    &::before {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .card-icon {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+}
+
+// Loading State
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    min-height: 350px;
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 0.75rem;
+    }
+
+    p {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+// Quick Stats Section
+.quick-stats {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    margin-top: 1.5rem;
+}
+
+.stats-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quick-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: #e9ecef;
+        transform: translateX(3px);
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+
+        &.sold {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        &.ewaste {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+    }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+        }
+
+        .stat-text {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 0.2rem;
+        }
+    }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+    .home-container {
+        padding: 1rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+        gap: 1rem;
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.35rem;
+        }
+
+        .card-content {
+            .card-title {
+                font-size: 0.75rem;
+            }
+            
+            .card-value {
+                font-size: 1.65rem;
+            }
+            
+            .card-label {
+                font-size: 0.7rem;
+            }
+        }
+    }
+
+    .stats-row {
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+    
+    .quick-stat-item {
+        padding: 0.75rem 1.25rem;
+    }
+}
