@@ -1,0 +1,54 @@
+@import '../login/login.component.scss';
+
+.register-container {
+  @extend .login-container;
+}
+
+.register-card {
+  @extend .login-card;
+  max-width: 500px;
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+
+    .half-width {
+      flex: 1;
+    }
+  }
+
+  .success-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #4caf50;
+    padding: 16px;
+    background-color: #e8f5e9;
+    border-radius: 4px;
+    margin-bottom: 16px;
+
+    mat-icon {
+      color: #4caf50;
+    }
+  }
+
+  .register-button {
+    @extend .login-button;
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .register-card {
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+
+      .half-width {
+        width: 100%;
+      }
+    }
+  }
+}
+

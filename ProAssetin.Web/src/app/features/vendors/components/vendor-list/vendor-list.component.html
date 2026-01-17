@@ -1,0 +1,116 @@
+<div class="vendor-list-container">
+  <div class="vendor-list-header">
+    <h1>Vendor List</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/vendors/add">
+        <span class="icon">+</span>
+        Add Vendor
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          class="filter-input" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by Vendor Name, Contact, Email...">
+      </div>
+      
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="isActiveFilter" (change)="applyFilters()">
+          <option [value]="undefined">All Statuses</option>
+          <option [value]="true">Active</option>
+          <option [value]="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading vendors...</p>
+  </div>
+
+  <!-- Vendors Table -->
+  <div *ngIf="!loading" class="vendors-table-container">
+    <table class="vendors-table">
+      <thead>
+        <tr>
+          <th>Vendor Name</th>
+          <th>Contact Person</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vendor of vendors" [class.inactive]="!vendor.isActive">
+          <td>
+            <strong>{{ vendor.vendorName }}</strong>
+            <div *ngIf="vendor.gstNumber" class="sub-info">GST: {{ vendor.gstNumber }}</div>
+          </td>
+          <td>{{ vendor.contactPerson || '-' }}</td>
+          <td>{{ vendor.email || '-' }}</td>
+          <td>{{ vendor.phoneNumber || '-' }}</td>
+          <td>{{ vendor.city || '-' }}</td>
+          <td>
+            <span class="status-badge" [class.active]="vendor.isActive" [class.inactive]="!vendor.isActive">
+              {{ vendor.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn-icon btn-edit" (click)="editVendor(vendor)" title="Edit">
+                ✏️
+              </button>
+              <button type="button" class="btn-icon btn-toggle" (click)="toggleVendorStatus(vendor)" 
+                      [title]="vendor.isActive ? 'Deactivate' : 'Activate'">
+                {{ vendor.isActive ? '👁️' : '👁️‍🗨️' }}
+              </button>
+              <button type="button" class="btn-icon btn-delete" (click)="deleteVendor(vendor)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="vendors.length === 0">
+          <td colspan="7" class="no-data">No vendors found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === 1" 
+              (click)="onPageChange(pageNumber - 1)">
+        Previous
+      </button>
+      <span class="page-info">
+        Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)
+      </span>
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === totalPages" 
+              (click)="onPageChange(pageNumber + 1)">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+

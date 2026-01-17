@@ -1,0 +1,310 @@
+<div class="add-asset-wrapper">
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button 
+      class="tab-button" 
+      [class.active]="selectedTab === 0"
+      (click)="selectedTab = 0">
+      Manual Entry
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="selectedTab === 1"
+      (click)="selectedTab = 1">
+      Upload Excel
+    </button>
+  </div>
+
+  <!-- Manual Entry Tab -->
+  <div class="tab-content" *ngIf="selectedTab === 0">
+    <form [formGroup]="assetForm" (ngSubmit)="onSubmit()" class="asset-form">
+      <div class="form-grid">
+        <!-- Basic Information Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">📋</span>
+            Basic Information
+          </h3>
+
+          <div class="form-group">
+            <label for="assetId">Asset ID <span class="required">*</span></label>
+            <input 
+              id="assetId"
+              type="text" 
+              formControlName="assetId" 
+              placeholder="e.g., LAP-001"
+              class="form-input"
+              [class.error]="f['assetId'].invalid && f['assetId'].touched">
+            <div class="error-message" *ngIf="f['assetId'].hasError('required') && f['assetId'].touched">
+              Asset ID is required
+            </div>
+            <div class="error-message" *ngIf="f['assetId'].hasError('maxlength') && f['assetId'].touched">
+              Asset ID is too long
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Asset Name <span class="required">*</span></label>
+            <input 
+              id="name"
+              type="text" 
+              formControlName="name" 
+              placeholder="e.g., Dell Laptop"
+              class="form-input"
+              [class.error]="f['name'].invalid && f['name'].touched">
+            <div class="error-message" *ngIf="f['name'].hasError('required') && f['name'].touched">
+              Asset name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select 
+              id="category"
+              formControlName="category"
+              class="form-input"
+              [class.error]="f['category'].invalid && f['category'].touched">
+              <option value="">Select Category</option>
+              <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            </select>
+            <div class="error-message" *ngIf="f['category'].hasError('required') && f['category'].touched">
+              Category is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status <span class="required">*</span></label>
+            <select 
+              id="status"
+              formControlName="status"
+              class="form-input"
+              [class.error]="f['status'].invalid && f['status'].touched">
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+            <div class="error-message" *ngIf="f['status'].hasError('required') && f['status'].touched">
+              Status is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input 
+              id="location"
+              type="text" 
+              formControlName="location" 
+              placeholder="e.g., Building A, Floor 2"
+              class="form-input">
+          </div>
+        </div>
+
+        <!-- Asset Details Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">⚙️</span>
+            Asset Details
+          </h3>
+
+          <div class="form-group">
+            <label for="make">Make</label>
+            <input 
+              id="make"
+              type="text" 
+              formControlName="make" 
+              placeholder="e.g., Dell, HP, Lenovo"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="model">Model</label>
+            <input 
+              id="model"
+              type="text" 
+              formControlName="model" 
+              placeholder="e.g., Latitude 5520"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="serialNumber">Serial Number</label>
+            <input 
+              id="serialNumber"
+              type="text" 
+              formControlName="serialNumber" 
+              placeholder="e.g., SN123456789"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="purchasePrice">Purchase Price</label>
+            <div class="input-with-prefix">
+              <span class="prefix">{{ currencySymbol }}</span>
+              <input 
+                id="purchasePrice"
+                type="number" 
+                formControlName="purchasePrice" 
+                placeholder="0.00"
+                class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="purchaseDate">Purchase Date</label>
+            <input 
+              id="purchaseDate"
+              type="date" 
+              formControlName="purchaseDate"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="warrantyExpiryDate">Warranty Expiry Date</label>
+            <input 
+              id="warrantyExpiryDate"
+              type="date" 
+              formControlName="warrantyExpiryDate"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="vendorId">Vendor</label>
+            <select 
+              id="vendorId"
+              formControlName="vendorId"
+              class="form-input">
+              <option [value]="null">Select Vendor (Optional)</option>
+              <option *ngFor="let vendor of vendors" [value]="vendor.id">
+                {{ vendor.vendorName }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-section-full">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea 
+            id="description"
+            formControlName="description" 
+            rows="3" 
+            placeholder="Additional notes about the asset"
+            class="form-input"></textarea>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || assetForm.invalid">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Adding...' : 'Add Asset' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Excel Upload Tab -->
+  <div class="tab-content" *ngIf="selectedTab === 1">
+    <div class="upload-section">
+      <div class="upload-area" 
+           [class.drag-over]="isDragOver"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)">
+        <input #fileInput 
+               type="file" 
+               accept=".xlsx,.xls" 
+               (change)="onFileSelected($event)"
+               class="file-input">
+        
+        <div class="upload-content" *ngIf="!selectedFile">
+          <div class="upload-icon">📤</div>
+          <h3>Drag & Drop Excel File</h3>
+          <p>or</p>
+          <button type="button" class="btn btn-primary" (click)="fileInput.click()">
+            Browse Files
+          </button>
+          <p class="upload-hint">
+            Supported formats: .xlsx, .xls (Max 10MB)
+          </p>
+        </div>
+
+        <div class="file-selected" *ngIf="selectedFile">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <div class="file-name">{{ selectedFile.name }}</div>
+            <div class="file-size">{{ formatFileSize(selectedFile.size) }}</div>
+          </div>
+          <button type="button" class="btn-icon" (click)="clearFile()" title="Remove file">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Template Download -->
+      <div class="template-card">
+        <div class="template-info">
+          <span class="template-icon">📥</span>
+          <div>
+            <h4>Download Excel Template</h4>
+            <p>Use our template to ensure correct format</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="downloadTemplate()">
+          Download Template
+        </button>
+      </div>
+
+      <!-- Upload Progress -->
+      <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="upload-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+        </div>
+        <p>Uploading... {{ uploadProgress }}%</p>
+      </div>
+
+      <!-- Upload Actions -->
+      <div class="upload-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="uploading">
+          Cancel
+        </button>
+        <button type="button" 
+                class="btn btn-primary" 
+                (click)="onExcelUpload()" 
+                [disabled]="!selectedFile || uploading">
+          <span *ngIf="uploading" class="spinner"></span>
+          {{ uploading ? 'Uploading...' : 'Upload & Import Assets' }}
+        </button>
+      </div>
+
+      <!-- Instructions -->
+      <details class="instructions">
+        <summary>
+          <span class="help-icon">❓</span>
+          Excel Format Instructions
+        </summary>
+        <div class="instructions-content">
+          <p><strong>Required Columns:</strong></p>
+          <ul>
+            <li><strong>AssetId</strong> - Unique asset identifier (required)</li>
+            <li><strong>Name</strong> - Asset name (required)</li>
+            <li><strong>Category</strong> - Asset category (required)</li>
+            <li><strong>Status</strong> - In-Stock, Repair, Sold, Damaged, or E-Waste (required)</li>
+            <li><strong>Location</strong> - Asset location (optional)</li>
+            <li><strong>Make</strong> - Manufacturer (optional)</li>
+            <li><strong>Model</strong> - Model number (optional)</li>
+            <li><strong>SerialNumber</strong> - Serial number (optional)</li>
+            <li><strong>PurchasePrice</strong> - Purchase price (optional)</li>
+            <li><strong>PurchaseDate</strong> - Purchase date in MM/DD/YYYY format (optional)</li>
+            <li><strong>WarrantyExpiryDate</strong> - Warranty expiry in MM/DD/YYYY format (optional)</li>
+            <li><strong>Description</strong> - Additional notes (optional)</li>
+          </ul>
+          <p><strong>Note:</strong> First row should contain column headers. Data starts from row 2.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</div>

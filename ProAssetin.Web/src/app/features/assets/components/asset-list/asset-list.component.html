@@ -1,0 +1,250 @@
+<div class="asset-list-container">
+  <div class="asset-list-header">
+    <h1>Asset List</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/assets/add">
+        <span class="icon">+</span>
+        Add Asset
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          class="filter-input" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by Asset ID, Name, Serial Number...">
+      </div>
+      
+      <div class="filter-group">
+        <label for="category">Category</label>
+        <select id="category" class="filter-input" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading assets...</p>
+  </div>
+
+  <!-- Assets Table -->
+  <div *ngIf="!loading" class="table-card">
+    <div class="table-wrapper">
+      <table class="assets-table">
+        <thead>
+          <tr>
+            <th>Asset ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Location</th>
+            <th>Assigned To</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let asset of dataSource.data">
+            <td class="asset-id">{{ asset.assetId }}</td>
+            <td>{{ asset.name }}</td>
+            <td>{{ asset.category }}</td>
+            <td>
+              <span class="status-badge" [class]="'status-' + (asset.status?.toLowerCase().replace(' ', '-') || '')">
+                {{ asset.status }}
+              </span>
+            </td>
+            <td>{{ asset.location || '-' }}</td>
+            <td>
+              <span *ngIf="asset.assignedToUserName">{{ asset.assignedToUserName }}</span>
+              <span *ngIf="!asset.assignedToUserName" class="text-muted">-</span>
+            </td>
+            <td class="actions-cell">
+              <button 
+                type="button"
+                class="btn-icon btn-allocate" 
+                (click)="openAllocateDialog(asset)"
+                *ngIf="!asset.assignedToUserId"
+                title="Allocate Asset">
+                <span class="icon">👤</span>
+              </button>
+              <button 
+                type="button"
+                class="btn-icon btn-edit" 
+                (click)="editAsset(asset.id)"
+                title="Edit Asset">
+                <span class="icon">✏️</span>
+              </button>
+              <button 
+                type="button"
+                class="btn-icon btn-delete" 
+                (click)="deleteAsset(asset.id)"
+                title="Delete Asset">
+                <span class="icon">🗑️</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="dataSource.data.length === 0" class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No assets found</h3>
+        <p>Get started by adding your first asset</p>
+        <button type="button" class="btn btn-primary" routerLink="/assets/add">Add Asset</button>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalCount > 0">
+      <div class="pagination-info">
+        Showing {{ (pageIndex * pageSize) + 1 }} to {{ Math.min((pageIndex + 1) * pageSize, totalCount) }} of {{ totalCount }} assets
+      </div>
+      <div class="pagination-controls">
+        <button 
+          type="button"
+          class="btn btn-secondary" 
+          (click)="previousPage()" 
+          [disabled]="pageIndex === 0">
+          Previous
+        </button>
+        <span class="page-info">Page {{ pageIndex + 1 }} of {{ totalPages }}</span>
+        <button 
+          type="button"
+          class="btn btn-secondary" 
+          (click)="nextPage()" 
+          [disabled]="pageIndex >= totalPages - 1">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Allocation Dialog -->
+<div class="dialog-overlay" *ngIf="showAllocateDialog" (click)="closeAllocateDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Allocate Asset</h2>
+      <button type="button" class="btn-icon" (click)="closeAllocateDialog()">✕</button>
+    </div>
+    
+    <div class="dialog-content">
+      <!-- Asset Info -->
+      <div class="asset-info-section">
+        <h3>Asset Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Asset ID:</span>
+            <span class="info-value">{{ selectedAsset?.assetId }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{ selectedAsset?.name }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Category:</span>
+            <span class="info-value">{{ selectedAsset?.category }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Make:</span>
+            <span class="info-value">{{ selectedAsset?.make || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Model:</span>
+            <span class="info-value">{{ selectedAsset?.model || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Serial Number:</span>
+            <span class="info-value">{{ selectedAsset?.serialNumber || '-' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Search -->
+      <div class="user-search-section">
+        <h3>Search User</h3>
+        <div class="search-field">
+          <label for="userSearch">Search by Email, User ID, or Name</label>
+          <div class="input-group">
+            <input 
+              id="userSearch"
+              type="text" 
+              class="search-input" 
+              [(ngModel)]="userSearchTerm" 
+              (keyup.enter)="searchUser()"
+              placeholder="Enter email, user ID, or name">
+            <button type="button" class="btn btn-primary" (click)="searchUser()" [disabled]="searchingUser">
+              <span *ngIf="!searchingUser">🔍</span>
+              <span *ngIf="searchingUser" class="spinner-small"></span>
+              Search
+            </button>
+          </div>
+          <div *ngIf="invalidUser" class="error-message">
+            User not found. Please check the search term.
+          </div>
+        </div>
+
+        <!-- User Details -->
+        <div *ngIf="selectedUser" class="user-details">
+          <h4>User Details</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Name:</span>
+              <span class="info-value">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email:</span>
+              <span class="info-value">{{ selectedUser.email }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedUser.phoneNumber">
+              <span class="info-label">Phone:</span>
+              <span class="info-value">{{ selectedUser.phoneNumber }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedUser.location">
+              <span class="info-label">Location:</span>
+              <span class="info-value">{{ selectedUser.location }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeAllocateDialog()" [disabled]="allocating">
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="allocateAsset()" 
+        [disabled]="!selectedUser || allocating">
+        <span *ngIf="allocating" class="spinner-small"></span>
+        {{ allocating ? 'Allocating...' : 'Allocate Asset' }}
+      </button>
+    </div>
+  </div>
+</div>

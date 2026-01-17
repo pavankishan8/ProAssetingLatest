@@ -1,0 +1,115 @@
+<div class="assets-dashboard-container">
+  <div class="dashboard-header">
+    <h1>Assets Dashboard</h1>
+    <p class="subtitle">Overview of all your assets</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card stat-total">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.totalAssets }}</div>
+            <div class="stat-label">Total Assets</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-available">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.available }}</div>
+            <div class="stat-label">Available</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-allocated">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>assignment_ind</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.allocated }}</div>
+            <div class="stat-label">Allocated</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-maintenance">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>build</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.maintenance }}</div>
+            <div class="stat-label">Maintenance</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>pie_chart</mat-icon>
+            Assets by Category
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="category-list">
+            <div *ngFor="let item of stats.byCategory" class="category-item">
+              <div class="category-info">
+                <div class="category-color" [style.background-color]="getCategoryColor(item.category)"></div>
+                <span class="category-name">{{ item.category }}</span>
+              </div>
+              <span class="category-count">{{ item.count }}</span>
+            </div>
+          </div>
+          <div *ngIf="stats.byCategory.length === 0" class="empty-state">
+            <mat-icon>info</mat-icon>
+            <p>No category data available</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>history</mat-icon>
+            Recent Assets
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="recent-assets-list">
+            <div *ngFor="let asset of stats.recentAssets" class="recent-asset-item">
+              <div class="asset-info">
+                <span class="asset-id">{{ asset.assetId }}</span>
+                <span class="asset-name">{{ asset.name }}</span>
+              </div>
+              <mat-chip [class]="'status-' + asset.status.toLowerCase()">{{ asset.status }}</mat-chip>
+            </div>
+          </div>
+          <div *ngIf="stats.recentAssets.length === 0" class="empty-state">
+            <mat-icon>info</mat-icon>
+            <p>No recent assets</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

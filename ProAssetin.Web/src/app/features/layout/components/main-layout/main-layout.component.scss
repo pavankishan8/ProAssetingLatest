@@ -1,0 +1,39 @@
+.sidenav-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // Prevent container scroll
+}
+
+.sidenav {
+  width: 260px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidenav-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // Use height instead of min-height
+  overflow: hidden; // Prevent wrapper scroll
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto; // Only vertical scroll
+  overflow-x: hidden; // Prevent horizontal scroll
+  background: #f5f5f5;
+  padding-bottom: 0; // Footer will handle spacing
+}
+
+// Responsive Design
+@media (max-width: 960px) {
+  .sidenav {
+    width: 240px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidenav {
+    width: 200px;
+  }
+}

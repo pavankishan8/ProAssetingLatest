@@ -1,0 +1,53 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <button mat-icon-button (click)="menuClick.emit()" class="menu-button" aria-label="Toggle menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!-- Company Logo/Name Section -->
+  <div class="company-section">
+    <img 
+      *ngIf="companyLogoUrl" 
+      [src]="companyLogoUrl" 
+      alt="Company Logo"
+      class="company-logo"
+      (error)="companyLogoUrl = null">
+    <mat-icon class="company-icon" *ngIf="!companyLogoUrl">business</mat-icon>
+    <div class="company-info">
+      <span class="company-name">{{ getCompanyName() }}</span>
+      <span class="app-name" *ngIf="showAppName">ProAssetin</span>
+    </div>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- User Menu Section -->
+  <div class="user-menu" *ngIf="currentUser$ | async as user">
+    <div class="user-info">
+      <mat-icon class="user-icon">account_circle</mat-icon>
+      <div class="user-details">
+        <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+        <span class="user-role" *ngIf="getUserRole()">{{ getUserRole() }}</span>
+      </div>
+    </div>
+    
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item disabled>
+        <mat-icon>email</mat-icon>
+        <span>{{ user.email }}</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>business</mat-icon>
+        <span>{{ getCompanyName() }}</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

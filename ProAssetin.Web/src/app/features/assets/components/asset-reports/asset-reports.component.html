@@ -1,0 +1,145 @@
+<div class="asset-reports-container">
+  <div class="reports-header">
+    <div class="header-content">
+      <h1>Asset Reports</h1>
+      <p class="subtitle">View and export asset reports</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="loadReports()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filters-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>filter_list</mat-icon>
+        Filters
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="filters-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="filters.startDate" [ngModelOptions]="{standalone: true}">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="filters.endDate" [ngModelOptions]="{standalone: true}">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="filters.category" [ngModelOptions]="{standalone: true}">
+            <mat-option value="">All Categories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="filters.status" [ngModelOptions]="{standalone: true}">
+            <mat-option value="">All Statuses</mat-option>
+            <mat-option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-actions">
+        <button mat-raised-button (click)="filterReports()">
+          <mat-icon>search</mat-icon>
+          Apply Filters
+        </button>
+        <button mat-button (click)="clearFilters()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading reports...</p>
+  </div>
+
+  <!-- Reports -->
+  <div *ngIf="!loading" class="reports-grid">
+    <mat-card *ngFor="let report of reports" class="report-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>{{ getReportIcon(report.type) }}</mat-icon>
+          {{ report.title }}
+        </mat-card-title>
+        <div class="card-actions">
+          <button mat-icon-button (click)="exportReport(report.type)" matTooltip="Export Report">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div [ngSwitch]="report.type">
+          <!-- Summary Report -->
+          <div *ngSwitchCase="'summary'" class="summary-report">
+            <div class="summary-stats">
+              <div class="summary-item">
+                <div class="summary-value">{{ report.data.total }}</div>
+                <div class="summary-label">Total</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-value">{{ report.data.available }}</div>
+                <div class="summary-label">Available</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-value">{{ report.data.allocated }}</div>
+                <div class="summary-label">Allocated</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-value">{{ report.data.maintenance }}</div>
+                <div class="summary-label">Maintenance</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-value">{{ report.data.disposed }}</div>
+                <div class="summary-label">Disposed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Report -->
+          <div *ngSwitchCase="'category'" class="category-report">
+            <div *ngFor="let item of getObjectEntries(report.data)" class="report-item">
+              <div class="report-label">{{ item.key }}</div>
+              <div class="report-value">{{ item.value }}</div>
+            </div>
+            <div *ngIf="getObjectEntries(report.data).length === 0" class="empty-state">
+              <p>No category data available</p>
+            </div>
+          </div>
+
+          <!-- Status Report -->
+          <div *ngSwitchCase="'status'" class="status-report">
+            <div *ngFor="let item of getObjectEntries(report.data)" class="report-item">
+              <div class="report-label">{{ item.key }}</div>
+              <div class="report-value">{{ item.value }}</div>
+            </div>
+            <div *ngIf="getObjectEntries(report.data).length === 0" class="empty-state">
+              <p>No status data available</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

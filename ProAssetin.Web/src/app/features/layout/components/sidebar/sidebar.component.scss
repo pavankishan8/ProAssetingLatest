@@ -1,0 +1,188 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+}
+
+.sidebar-header {
+  padding: 16px;
+  background-color: #3f51b5;
+  color: white;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+  
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+  }
+}
+
+mat-nav-list {
+  padding-top: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+  a {
+    position: relative;
+
+    &.active {
+      background-color: rgba(63, 81, 181, 0.1);
+      border-left: 3px solid #3f51b5;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    &.expandable {
+      cursor: pointer;
+    }
+
+    // Ensure the content area takes available space and positions items correctly
+    ::ng-deep .mat-list-item-content {
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      flex-direction: row !important;
+      width: 100%;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    // Ensure icon stays on the left
+    mat-icon[matListItemIcon] {
+      flex-shrink: 0;
+      margin-right: 16px;
+    }
+
+    // Make the title span take available space and prevent wrapping
+    span[matListItemTitle] {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+
+      &.menu-label {
+        .label-text {
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-right: 8px;
+        }
+      }
+    }
+
+    // Position expand icon at the right end, inline with text
+    .expand-icon {
+      flex-shrink: 0 !important;
+      margin-left: auto !important;
+      margin-right: 0 !important;
+      transition: transform 0.2s;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+
+      &.expanded {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .submenu {
+    background-color: #f5f5f5;
+    padding-left: 0;
+    font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+
+    .submenu-item {
+      padding-left: 56px !important; // Indent submenu items
+      font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+
+      &.active {
+        background-color: rgba(63, 81, 181, 0.15);
+        border-left: 3px solid #3f51b5;
+        font-weight: 500;
+        font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-right: 16px;
+        color: #666;
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 600px) {
+  .sidebar-header {
+    padding: 12px;
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+
+  mat-nav-list {
+    .submenu {
+      .submenu-item {
+        padding-left: 48px !important;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}

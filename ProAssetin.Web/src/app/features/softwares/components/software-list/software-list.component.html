@@ -1,0 +1,139 @@
+<div class="software-list-container">
+  <div class="software-list-header">
+    <h1>Software List</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/softwares/add">
+        <span class="icon">+</span>
+        Add Software
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          class="filter-input" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by Software Name, Version, License Key...">
+      </div>
+      
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option [value]="undefined">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="category">Category</label>
+        <select id="category" class="filter-input" [(ngModel)]="categoryFilter" (change)="applyFilters()">
+          <option [value]="undefined">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="licenseType">License Type</label>
+        <select id="licenseType" class="filter-input" [(ngModel)]="licenseTypeFilter" (change)="applyFilters()">
+          <option [value]="undefined">All License Types</option>
+          <option *ngFor="let type of licenseTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading software...</p>
+  </div>
+
+  <!-- Software Table -->
+  <div *ngIf="!loading" class="software-table-container">
+    <table class="software-table">
+      <thead>
+        <tr>
+          <th>Software Name</th>
+          <th>Version</th>
+          <th>Category</th>
+          <th>License Type</th>
+          <th>Vendor</th>
+          <th>Licenses</th>
+          <th>Expiry Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let software of softwareList" [class]="getStatusClass(software.status)">
+          <td>
+            <strong>{{ software.softwareName }}</strong>
+            <div *ngIf="software.description" class="sub-info">{{ software.description }}</div>
+          </td>
+          <td>{{ software.version || '-' }}</td>
+          <td>{{ software.category || '-' }}</td>
+          <td>{{ software.licenseType || '-' }}</td>
+          <td>{{ software.vendorName || '-' }}</td>
+          <td>
+            <span *ngIf="software.totalLicenses">
+              <strong>{{ software.usedLicenses || 0 }}/{{ software.totalLicenses }}</strong>
+              <div class="sub-info">Available: {{ software.availableLicenses || 0 }}</div>
+            </span>
+            <span *ngIf="!software.totalLicenses">-</span>
+          </td>
+          <td [class.expiring-soon]="isExpiringSoon(software.licenseExpiryDate)">
+            {{ formatDate(software.licenseExpiryDate) }}
+          </td>
+          <td>
+            <span class="status-badge" [class]="getStatusClass(software.status)">
+              {{ software.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn-icon btn-edit" (click)="editSoftware(software)" title="Edit">
+                ✏️
+              </button>
+              <button type="button" class="btn-icon btn-delete" (click)="deleteSoftware(software)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="softwareList.length === 0">
+          <td colspan="9" class="no-data">No software found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === 1" 
+              (click)="onPageChange(pageNumber - 1)">
+        Previous
+      </button>
+      <span class="page-info">
+        Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)
+      </span>
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === totalPages" 
+              (click)="onPageChange(pageNumber + 1)">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+

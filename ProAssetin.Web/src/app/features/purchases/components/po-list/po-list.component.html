@@ -1,0 +1,118 @@
+<div class="po-list-container">
+  <div class="po-list-header">
+    <h1>Purchase Orders</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/purchases/add">
+        <span class="icon">+</span>
+        Create Purchase Order
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          class="filter-input" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by PO Number, Vendor...">
+      </div>
+      
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option [value]="undefined">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading purchase orders...</p>
+  </div>
+
+  <!-- Purchase Orders Table -->
+  <div *ngIf="!loading" class="po-table-container">
+    <table class="po-table">
+      <thead>
+        <tr>
+          <th>PO Number</th>
+          <th>Vendor</th>
+          <th>PO Date</th>
+          <th>Expected Delivery</th>
+          <th>Total Amount</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let po of purchaseOrders" [class]="getStatusClass(po.status)">
+          <td>
+            <strong>{{ po.poNumber }}</strong>
+            <div *ngIf="po.description" class="sub-info">{{ po.description }}</div>
+          </td>
+          <td>{{ po.vendorName || '-' }}</td>
+          <td>{{ formatDate(po.poDate) }}</td>
+          <td>{{ formatDate(po.expectedDeliveryDate || '') }}</td>
+          <td><strong>{{ formatCurrency(po.totalAmount) }}</strong></td>
+          <td>
+            <span class="status-badge" [class]="getStatusClass(po.status)">
+              {{ po.status }}
+            </span>
+          </td>
+          <td>{{ po.createdByUserName || '-' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn-icon btn-edit" (click)="editPO(po)" title="Edit">
+                ✏️
+              </button>
+              <button *ngIf="po.status === 'Draft' || po.status === 'Submitted'" 
+                      type="button" class="btn-icon btn-approve" (click)="approvePO(po)" 
+                      title="Approve">
+                ✓
+              </button>
+              <button type="button" class="btn-icon btn-delete" (click)="deletePO(po)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="purchaseOrders.length === 0">
+          <td colspan="8" class="no-data">No purchase orders found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === 1" 
+              (click)="onPageChange(pageNumber - 1)">
+        Previous
+      </button>
+      <span class="page-info">
+        Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)
+      </span>
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === totalPages" 
+              (click)="onPageChange(pageNumber + 1)">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+

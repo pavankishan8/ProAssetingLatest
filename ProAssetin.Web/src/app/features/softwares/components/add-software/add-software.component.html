@@ -1,0 +1,227 @@
+<div class="add-software-wrapper">
+  <div class="software-form-container">
+    <h1 class="page-title">{{ isEditMode ? 'Edit Software' : 'Add New Software' }}</h1>
+    
+    <form [formGroup]="softwareForm" (ngSubmit)="onSubmit()" class="software-form">
+      <div class="form-grid">
+        <!-- Basic Information Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">💿</span>
+            Basic Information
+          </h3>
+
+          <div class="form-group">
+            <label for="softwareName">Software Name <span class="required">*</span></label>
+            <input 
+              id="softwareName"
+              type="text" 
+              formControlName="softwareName" 
+              placeholder="e.g., Microsoft Office"
+              class="form-input"
+              [class.error]="f['softwareName'].invalid && f['softwareName'].touched">
+            <div class="error-message" *ngIf="f['softwareName'].hasError('required') && f['softwareName'].touched">
+              Software name is required
+            </div>
+            <div class="error-message" *ngIf="f['softwareName'].hasError('maxlength') && f['softwareName'].touched">
+              Software name is too long
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="version">Version</label>
+            <input 
+              id="version"
+              type="text" 
+              formControlName="version" 
+              placeholder="e.g., 2021, 2.5.0"
+              class="form-input"
+              [class.error]="f['version'].invalid && f['version'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select 
+              id="category"
+              formControlName="category"
+              class="form-input"
+              [class.error]="f['category'].invalid && f['category'].touched">
+              <option value="">Select Category</option>
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="installationPath">Installation Path</label>
+            <input 
+              id="installationPath"
+              type="text" 
+              formControlName="installationPath" 
+              placeholder="e.g., C:\Program Files\Software"
+              class="form-input"
+              [class.error]="f['installationPath'].invalid && f['installationPath'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status <span class="required">*</span></label>
+            <select 
+              id="status"
+              formControlName="status"
+              class="form-input"
+              [class.error]="f['status'].invalid && f['status'].touched">
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+            <div class="error-message" *ngIf="f['status'].hasError('required') && f['status'].touched">
+              Status is required
+            </div>
+          </div>
+        </div>
+
+        <!-- License Information Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">🔑</span>
+            License Information
+          </h3>
+
+          <div class="form-group">
+            <label for="licenseType">License Type</label>
+            <select 
+              id="licenseType"
+              formControlName="licenseType"
+              class="form-input"
+              [class.error]="f['licenseType'].invalid && f['licenseType'].touched">
+              <option value="">Select License Type</option>
+              <option *ngFor="let type of licenseTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="licenseKey">License Key</label>
+            <input 
+              id="licenseKey"
+              type="text" 
+              formControlName="licenseKey" 
+              placeholder="Enter license key"
+              class="form-input"
+              [class.error]="f['licenseKey'].invalid && f['licenseKey'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="totalLicenses">Total Licenses</label>
+            <input 
+              id="totalLicenses"
+              type="number" 
+              formControlName="totalLicenses" 
+              placeholder="e.g., 50"
+              min="0"
+              class="form-input"
+              [class.error]="f['totalLicenses'].invalid && f['totalLicenses'].touched">
+            <small class="form-hint">Leave empty if unlimited</small>
+          </div>
+
+          <div class="form-group">
+            <label for="usedLicenses">Used Licenses</label>
+            <input 
+              id="usedLicenses"
+              type="number" 
+              formControlName="usedLicenses" 
+              placeholder="e.g., 25"
+              min="0"
+              class="form-input"
+              [class.error]="f['usedLicenses'].invalid && f['usedLicenses'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="licenseExpiryDate">License Expiry Date</label>
+            <input 
+              id="licenseExpiryDate"
+              type="date" 
+              formControlName="licenseExpiryDate"
+              class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchase Information Section -->
+      <div class="form-section-full">
+        <h3 class="section-title">
+          <span class="icon">💰</span>
+          Purchase Information
+        </h3>
+        
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label for="vendorId">Vendor</label>
+            <select 
+              id="vendorId"
+              formControlName="vendorId"
+              class="form-input"
+              [class.error]="f['vendorId'].invalid && f['vendorId'].touched">
+              <option [value]="null">Select Vendor</option>
+              <option *ngFor="let vendor of vendors" [value]="vendor.id">
+                {{ vendor.vendorName }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="purchasePrice">Purchase Price</label>
+            <div class="input-with-prefix">
+              <span class="prefix">{{ currencySymbol }}</span>
+              <input 
+                id="purchasePrice"
+                type="number" 
+                formControlName="purchasePrice" 
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="purchaseDate">Purchase Date</label>
+            <input 
+              id="purchaseDate"
+              type="date" 
+              formControlName="purchaseDate"
+              class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <div class="form-section-full">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea 
+            id="description"
+            formControlName="description" 
+            rows="4" 
+            placeholder="Additional notes about this software"
+            class="form-input"
+            [class.error]="f['description'].invalid && f['description'].touched"></textarea>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>{{ isEditMode ? 'Updating software...' : 'Adding software...' }}</p>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || softwareForm.invalid">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? (isEditMode ? 'Updating...' : 'Adding...') : (isEditMode ? 'Update Software' : 'Add Software') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

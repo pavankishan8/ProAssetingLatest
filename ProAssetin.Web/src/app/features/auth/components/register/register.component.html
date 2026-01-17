@@ -1,0 +1,72 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>Create Account</mat-card-title>
+      <mat-card-subtitle>Sign up for ProAssetin</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="success-message" *ngIf="success">
+        <mat-icon>check_circle</mat-icon>
+        Registration successful! Redirecting to login...
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" *ngIf="!success">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="John">
+            <mat-error *ngIf="f['firstName'].hasError('required')">First name is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Doe">
+            <mat-error *ngIf="f['lastName'].hasError('required')">Last name is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="your.email@company.com">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="f['email'].hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="f['email'].hasError('email')">Please enter a valid email</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="Minimum 6 characters">
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-error *ngIf="f['password'].hasError('required')">Password is required</mat-error>
+          <mat-error *ngIf="f['password'].hasError('minlength')">Password must be at least 6 characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput formControlName="confirmPassword" type="password" placeholder="Re-enter your password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-error *ngIf="f['confirmPassword'].hasError('required')">Please confirm your password</mat-error>
+        </mat-form-field>
+
+        <div class="error-message" *ngIf="registerForm.hasError('passwordMismatch') && f['confirmPassword'].touched">
+          Passwords do not match
+        </div>
+
+        <div class="error-message" *ngIf="error">{{ error }}</div>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width register-button" [disabled]="loading">
+          <mat-spinner diameter="20" *ngIf="loading" class="spinner"></mat-spinner>
+          <span *ngIf="!loading">Sign Up</span>
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <div class="footer-text">
+        Already have an account? <a routerLink="/auth/login">Sign in</a>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>
+

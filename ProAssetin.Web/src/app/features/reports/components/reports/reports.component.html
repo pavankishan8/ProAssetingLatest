@@ -1,0 +1,18 @@
+<div class="reports-container">
+  <h1>Reports</h1>
+
+  <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+
+  <div *ngIf="!loading && reports" class="reports-content">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Asset Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Reports will be displayed here</p>
+        <pre>{{ reports | json }}</pre>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

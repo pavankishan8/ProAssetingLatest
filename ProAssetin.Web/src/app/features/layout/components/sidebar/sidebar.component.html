@@ -1,0 +1,34 @@
+<div class="sidebar-header">
+  <h2>ProAssetin</h2>
+</div>
+
+<mat-nav-list>
+  <ng-container *ngFor="let item of menuItems">
+    <!-- Parent Menu Item -->
+    <a mat-list-item 
+       [routerLink]="item.children ? null : item.route" 
+       routerLinkActive="active"
+       (click)="item.children && toggleExpand(item)"
+       [class.expandable]="item.children">
+      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+      <span matListItemTitle class="menu-label">
+        <span class="label-text">{{ item.label }}</span>
+        <mat-icon *ngIf="item.children" class="expand-icon" [class.expanded]="item.expanded">
+          {{ item.expanded ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </span>
+    </a>
+
+    <!-- Child Menu Items -->
+    <div *ngIf="item.children && item.expanded" class="submenu">
+      <a mat-list-item 
+         *ngFor="let child of item.children" 
+         [routerLink]="child.route" 
+         routerLinkActive="active"
+         class="submenu-item">
+        <mat-icon matListItemIcon>{{ child.icon }}</mat-icon>
+        <span matListItemTitle>{{ child.label }}</span>
+      </a>
+    </div>
+  </ng-container>
+</mat-nav-list>

@@ -1,0 +1,117 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // Prevent body scroll - main-content handles scrolling
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif;
+}
+
+* {
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif;
+}
+
+// Material Design Typography override
+.mat-typography {
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif;
+}
+
+// Material components font override
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-form-field,
+.mat-mdc-input-element,
+.mat-mdc-table,
+.mat-mdc-card,
+.mat-mdc-tab-label,
+.mat-mdc-option,
+.mat-mdc-select,
+.mat-mdc-dialog-title,
+.mat-mdc-dialog-content,
+.mat-mdc-menu-item,
+.mat-mdc-list-item,
+.mat-nav-list,
+.mat-mdc-list-item-title,
+.mat-mdc-list-item-line,
+.mat-list-item,
+.mat-list-text,
+.mat-list-base .mat-list-item,
+.mat-list-base .mat-list-item .mat-list-item-content,
+.mat-list-base .mat-list-item .mat-list-text,
+.mdc-list-item__primary-text,
+.mdc-list-item__secondary-text {
+  font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
+}
+
+// Custom theme variables
+:root {
+  --primary-color: #3f51b5;
+  --accent-color: #ff4081;
+  --warn-color: #f44336;
+}
+
+// Responsive breakpoints
+$mobile: 600px;
+$tablet: 960px;
+$desktop: 1280px;
+
+// Utility classes
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+// Material overrides
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Responsive table
+@media (max-width: $mobile) {
+  .mat-mdc-table {
+    .mat-mdc-header-row {
+      display: none;
+    }
+    
+    .mat-mdc-row {
+      flex-direction: column;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 16px;
+      padding: 16px;
+      
+      .mat-mdc-cell {
+        border: none;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        
+        &:before {
+          content: attr(data-label);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
