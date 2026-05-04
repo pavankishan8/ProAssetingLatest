@@ -6,9 +6,9 @@
   <ng-container *ngFor="let item of menuItems">
     <!-- Parent Menu Item -->
     <a mat-list-item 
-       [routerLink]="item.children ? null : item.route" 
+       [routerLink]="item.children ? (item.children[0].route || null) : item.route" 
        routerLinkActive="active"
-       (click)="item.children && toggleExpand(item)"
+       (click)="item.children && handleParentClick($event, item)"
        [class.expandable]="item.children">
       <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
       <span matListItemTitle class="menu-label">

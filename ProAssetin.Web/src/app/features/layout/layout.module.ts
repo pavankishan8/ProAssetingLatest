@@ -38,6 +38,22 @@ const routes = [
         loadChildren: () => import('../softwares/softwares.module').then(m => m.SoftwaresModule)
       },
       {
+        path: 'invoices',
+        loadChildren: () => import('../invoices/invoices.module').then(m => m.InvoicesModule)
+      },
+      {
+        path: 'budgets',
+        loadChildren: () => import('../budgets/budgets.module').then(m => m.BudgetsModule)
+      },
+      {
+        path: 'ewaste',
+        loadChildren: () => import('../ewaste/ewaste.module').then(m => m.EWasteModule)
+      },
+      {
+        path: 'security',
+        loadChildren: () => import('../security/security.module').then(m => m.SecurityModule)
+      },
+      {
         path: 'settings',
         loadChildren: () => import('../settings/settings.module').then(m => m.SettingsModule)
       }

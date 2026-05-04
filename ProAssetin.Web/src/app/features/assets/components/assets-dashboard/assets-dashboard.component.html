@@ -9,7 +9,7 @@
   </div>
 
   <div *ngIf="!loading" class="dashboard-content">
-    <!-- Stats Cards -->
+    <!-- Stats Cards by Status -->
     <div class="stats-grid">
       <mat-card class="stat-card stat-total">
         <mat-card-content>
@@ -23,38 +23,62 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="stat-card stat-available">
+      <mat-card class="stat-card stat-instock">
         <mat-card-content>
           <div class="stat-icon-wrapper">
             <mat-icon>check_circle</mat-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.available }}</div>
-            <div class="stat-label">Available</div>
+            <div class="stat-value">{{ stats.inStock }}</div>
+            <div class="stat-label">In-Stock</div>
           </div>
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="stat-card stat-allocated">
-        <mat-card-content>
-          <div class="stat-icon-wrapper">
-            <mat-icon>assignment_ind</mat-icon>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value">{{ stats.allocated }}</div>
-            <div class="stat-label">Allocated</div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card stat-maintenance">
+      <mat-card class="stat-card stat-repair">
         <mat-card-content>
           <div class="stat-icon-wrapper">
             <mat-icon>build</mat-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.maintenance }}</div>
-            <div class="stat-label">Maintenance</div>
+            <div class="stat-value">{{ stats.repair }}</div>
+            <div class="stat-label">Repair</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-damaged">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.damaged }}</div>
+            <div class="stat-label">Damaged</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-sold">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>sell</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.sold }}</div>
+            <div class="stat-label">Sold</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card stat-ewaste">
+        <mat-card-content>
+          <div class="stat-icon-wrapper">
+            <mat-icon>delete_forever</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.ewaste }}</div>
+            <div class="stat-label">E-Waste</div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -62,6 +86,37 @@
 
     <!-- Charts Section -->
     <div class="charts-section">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>bar_chart</mat-icon>
+            Assets Added (Last 7 Days)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #weeklyChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>show_chart</mat-icon>
+            Assets Added (Last 6 Months)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #monthlyChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Additional Info Section -->
+    <div class="info-section">
       <mat-card class="chart-card">
         <mat-card-header>
           <mat-card-title>

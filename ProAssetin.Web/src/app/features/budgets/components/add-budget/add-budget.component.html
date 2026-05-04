@@ -1,0 +1,71 @@
+<div class="add-budget-wrapper">
+  <div class="budget-form-container">
+    <h1 class="page-title">{{ isEditMode ? 'Edit budget' : 'Create budget' }}</h1>
+
+    <form [formGroup]="budgetForm" (ngSubmit)="onSubmit()" class="budget-form">
+      <div class="form-grid">
+        <div class="form-column">
+          <h3 class="section-title"><span class="icon">📊</span> Details</h3>
+
+          <div class="form-group">
+            <label for="name">Name <span class="required">*</span></label>
+            <input id="name" type="text" formControlName="name" class="form-input" placeholder="e.g. IT hardware FY2026"
+              [class.error]="f['name'].invalid && f['name'].touched">
+            <div class="error-message" *ngIf="f['name'].hasError('required') && f['name'].touched">Name is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" class="form-input" rows="3" placeholder="Optional notes"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="fiscalYear">Fiscal year <span class="required">*</span></label>
+            <input id="fiscalYear" type="number" formControlName="fiscalYear" class="form-input" min="2000" max="2100"
+              [class.error]="f['fiscalYear'].invalid && f['fiscalYear'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category / cost center</label>
+            <input id="category" type="text" formControlName="category" class="form-input" placeholder="Optional">
+          </div>
+        </div>
+
+        <div class="form-column">
+          <h3 class="section-title"><span class="icon">💰</span> Amounts & status</h3>
+
+          <div class="form-group">
+            <label for="allocatedAmount">Allocated amount <span class="required">*</span></label>
+            <div class="input-with-prefix">
+              <span class="prefix">{{ currencySymbol }}</span>
+              <input id="allocatedAmount" type="number" formControlName="allocatedAmount" class="form-input" step="0.01" min="0.01"
+                [class.error]="f['allocatedAmount'].invalid && f['allocatedAmount'].touched">
+            </div>
+            <div class="error-message" *ngIf="f['allocatedAmount'].hasError('min') && f['allocatedAmount'].touched">Must be greater than 0</div>
+          </div>
+
+          <div class="form-group">
+            <label for="spentAmount">Spent to date</label>
+            <div class="input-with-prefix">
+              <span class="prefix">{{ currencySymbol }}</span>
+              <input id="spentAmount" type="number" formControlName="spentAmount" class="form-input" step="0.01" min="0">
+            </div>
+            <p class="hint">Update manually for now; later this can tie to purchase orders.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status <span class="required">*</span></label>
+            <select id="status" formControlName="status" class="form-input">
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Saving...' : (isEditMode ? 'Save changes' : 'Create budget') }}</button>
+      </div>
+    </form>
+  </div>
+</div>

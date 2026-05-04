@@ -1,0 +1,115 @@
+<div class="invoice-list-container">
+  <div class="invoice-list-header">
+    <h1>Invoices</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/invoices/add">
+        <span class="icon">+</span>
+        Add Invoice
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          class="filter-input" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by Invoice Number, Vendor...">
+      </div>
+      
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option [value]="undefined">All Statuses</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading invoices...</p>
+  </div>
+
+  <!-- Invoices Table -->
+  <div *ngIf="!loading" class="invoice-table-container">
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Vendor</th>
+          <th>Invoice Date</th>
+          <th>Due Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>PO Number</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of invoices" [class]="getStatusClass(invoice.status)">
+          <td>
+            <strong>{{ invoice.invoiceNumber }}</strong>
+            <div *ngIf="invoice.description" class="sub-info">{{ invoice.description }}</div>
+          </td>
+          <td>{{ invoice.vendorName || '-' }}</td>
+          <td>{{ formatDate(invoice.invoiceDate) }}</td>
+          <td>{{ formatDate(invoice.dueDate || '') }}</td>
+          <td><strong>{{ formatCurrency(invoice.amount) }}</strong></td>
+          <td>
+            <span class="status-badge" [class]="getStatusClass(invoice.status)">
+              {{ invoice.status }}
+            </span>
+          </td>
+          <td>{{ invoice.purchaseOrderNumber || '-' }}</td>
+          <td>{{ invoice.createdByUserName || '-' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn-icon btn-edit" (click)="editInvoice(invoice)" title="Edit">
+                ✏️
+              </button>
+              <button type="button" class="btn-icon btn-delete" (click)="deleteInvoice(invoice)" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="invoices.length === 0">
+          <td colspan="9" class="no-data">No invoices found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === 1" 
+              (click)="onPageChange(pageNumber - 1)">
+        Previous
+      </button>
+      <span class="page-info">
+        Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)
+      </span>
+      <button type="button" class="btn btn-secondary" 
+              [disabled]="pageNumber === totalPages" 
+              (click)="onPageChange(pageNumber + 1)">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+

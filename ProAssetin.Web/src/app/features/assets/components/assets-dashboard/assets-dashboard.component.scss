@@ -99,139 +99,202 @@
       &.stat-maintenance {
         background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
       }
+
+      &.stat-instock {
+        background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+      }
+
+      &.stat-repair {
+        background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
+      }
+
+      &.stat-damaged {
+        background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+      }
+
+      &.stat-sold {
+        background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+      }
+
+      &.stat-ewaste {
+        background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+      }
     }
+  }
+
+  .info-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
   }
 
   .charts-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 24px;
+  }
 
-    .chart-card {
-      border-radius: 12px;
+  // Common styles for all chart cards (both in charts-section and info-section)
+  .chart-card {
+    border-radius: 12px;
 
-      mat-card-header {
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 16px;
-        margin-bottom: 16px;
+    mat-card-header {
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
 
-        mat-card-title {
-          display: flex;
-          align-items: center;
-          font-size: 18px;
-          font-weight: 500;
-
-          mat-icon {
-            margin-right: 8px;
-            color: #3f51b5;
-          }
-        }
-      }
-
-      .category-list {
-        .category-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px;
-          margin-bottom: 8px;
-          background: #f9f9f9;
-          border-radius: 8px;
-
-          .category-info {
-            display: flex;
-            align-items: center;
-
-            .category-color {
-              width: 16px;
-              height: 16px;
-              border-radius: 50%;
-              margin-right: 12px;
-              border: 2px solid white;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            .category-name {
-              font-size: 14px;
-              color: #333;
-              text-transform: capitalize;
-            }
-          }
-
-          .category-count {
-            font-size: 18px;
-            font-weight: 600;
-            color: #3f51b5;
-          }
-        }
-      }
-
-      .recent-assets-list {
-        .recent-asset-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px;
-          margin-bottom: 8px;
-          background: #f9f9f9;
-          border-radius: 8px;
-
-          .asset-info {
-            display: flex;
-            flex-direction: column;
-
-            .asset-id {
-              font-size: 12px;
-              color: #666;
-              margin-bottom: 4px;
-            }
-
-            .asset-name {
-              font-size: 14px;
-              font-weight: 500;
-              color: #333;
-            }
-          }
-
-          mat-chip {
-            font-size: 11px;
-
-            &.status-available {
-              background: #4caf50;
-              color: white;
-            }
-
-            &.status-allocated {
-              background: #ff9800;
-              color: white;
-            }
-
-            &.status-maintenance {
-              background: #f44336;
-              color: white;
-            }
-          }
-        }
-      }
-
-      .empty-state {
+      mat-card-title {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 40px;
-        color: #999;
+        font-size: 18px;
+        font-weight: 500;
 
         mat-icon {
-          font-size: 48px;
-          width: 48px;
-          height: 48px;
-          margin-bottom: 16px;
+          margin-right: 8px;
+          color: #3f51b5;
+        }
+      }
+    }
+
+    .category-list {
+      .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #f9f9f9;
+        border-radius: 8px;
+
+        .category-info {
+          display: flex;
+          align-items: center;
+
+          .category-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 12px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          .category-name {
+            font-size: 14px;
+            color: #333;
+            text-transform: capitalize;
+          }
         }
 
-        p {
-          margin: 0;
+        .category-count {
+          font-size: 18px;
+          font-weight: 600;
+          color: #3f51b5;
         }
+      }
+    }
+
+    .recent-assets-list {
+      .recent-asset-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #f9f9f9;
+        border-radius: 8px;
+
+        .asset-info {
+          display: flex;
+          flex-direction: column;
+
+          .asset-id {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+
+          .asset-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+          }
+        }
+
+        mat-chip {
+          font-size: 11px;
+
+          &.status-available {
+            background: #4caf50;
+            color: white;
+          }
+
+          &.status-allocated {
+            background: #ff9800;
+            color: white;
+          }
+
+          &.status-maintenance {
+            background: #f44336;
+            color: white;
+          }
+
+          &.status-in-stock {
+            background: #4caf50;
+            color: white;
+          }
+
+          &.status-repair {
+            background: #ff9800;
+            color: white;
+          }
+
+          &.status-damaged {
+            background: #f44336;
+            color: white;
+          }
+
+          &.status-sold {
+            background: #9c27b0;
+            color: white;
+          }
+
+          &.status-e-waste {
+            background: #607d8b;
+            color: white;
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: #999;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+
+      canvas {
+        max-height: 100%;
       }
     }
   }
@@ -249,6 +312,10 @@
   }
 
   .charts-section {
+    grid-template-columns: 1fr !important;
+  }
+
+  .info-section {
     grid-template-columns: 1fr !important;
   }
 }

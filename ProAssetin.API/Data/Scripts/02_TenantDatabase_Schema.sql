@@ -310,10 +310,123 @@ BEGIN
 END
 GO
 
+-- =============================================
+-- Table: ProAssetinBudgets
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProAssetinBudgets]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[ProAssetinBudgets] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [Name] NVARCHAR(200) NOT NULL,
+        [Description] NVARCHAR(500) NULL,
+        [FiscalYear] INT NOT NULL,
+        [Category] NVARCHAR(100) NULL,
+        [AllocatedAmount] DECIMAL(18,2) NOT NULL,
+        [SpentAmount] DECIMAL(18,2) NOT NULL DEFAULT 0,
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Active',
+        [TenantId] NVARCHAR(100) NOT NULL,
+        [CreatedByUserId] NVARCHAR(450) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [UpdatedAt] DATETIME2 NULL,
+        CONSTRAINT [PK_ProAssetinBudgets] PRIMARY KEY ([Id])
+    );
+    
+    CREATE INDEX [IX_ProAssetinBudgets_TenantId] ON [dbo].[ProAssetinBudgets]([TenantId]);
+    CREATE INDEX [IX_ProAssetinBudgets_FiscalYear] ON [dbo].[ProAssetinBudgets]([FiscalYear]);
+    CREATE INDEX [IX_ProAssetinBudgets_Status] ON [dbo].[ProAssetinBudgets]([Status]);
+    CREATE INDEX [IX_ProAssetinBudgets_CreatedByUserId] ON [dbo].[ProAssetinBudgets]([CreatedByUserId]);
+    PRINT '✓ Table created: ProAssetinBudgets';
+END
+ELSE
+BEGIN
+    PRINT '⚠ Table already exists: ProAssetinBudgets';
+END
+GO
+
+-- =============================================
+-- Table: ProAssetinEWasteDisposals
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProAssetinEWasteDisposals]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[ProAssetinEWasteDisposals] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [DisposalReference] NVARCHAR(100) NOT NULL,
+        [AssetId] INT NULL,
+        [ItemDescription] NVARCHAR(500) NOT NULL,
+        [Category] NVARCHAR(100) NULL,
+        [Quantity] INT NOT NULL DEFAULT 1,
+        [EstimatedWeightKg] DECIMAL(18,2) NULL,
+        [RecyclerName] NVARCHAR(200) NULL,
+        [PickupDate] DATETIME2 NULL,
+        [DisposalDate] DATETIME2 NULL,
+        [CertificateReference] NVARCHAR(200) NULL,
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Scheduled',
+        [Notes] NVARCHAR(1000) NULL,
+        [TenantId] NVARCHAR(100) NOT NULL,
+        [CreatedByUserId] NVARCHAR(450) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [UpdatedAt] DATETIME2 NULL,
+        CONSTRAINT [PK_ProAssetinEWasteDisposals] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_ProAssetinEWasteDisposals_ProAssetinAssets] FOREIGN KEY ([AssetId]) REFERENCES [dbo].[ProAssetinAssets]([Id]) ON DELETE SET NULL
+    );
+
+    CREATE UNIQUE INDEX [IX_ProAssetinEWasteDisposals_RefTenant] ON [dbo].[ProAssetinEWasteDisposals]([DisposalReference], [TenantId]);
+    CREATE INDEX [IX_ProAssetinEWasteDisposals_TenantId] ON [dbo].[ProAssetinEWasteDisposals]([TenantId]);
+    CREATE INDEX [IX_ProAssetinEWasteDisposals_Status] ON [dbo].[ProAssetinEWasteDisposals]([Status]);
+    CREATE INDEX [IX_ProAssetinEWasteDisposals_DisposalDate] ON [dbo].[ProAssetinEWasteDisposals]([DisposalDate]);
+    CREATE INDEX [IX_ProAssetinEWasteDisposals_AssetId] ON [dbo].[ProAssetinEWasteDisposals]([AssetId]);
+    CREATE INDEX [IX_ProAssetinEWasteDisposals_CreatedByUserId] ON [dbo].[ProAssetinEWasteDisposals]([CreatedByUserId]);
+    PRINT '✓ Table created: ProAssetinEWasteDisposals';
+END
+ELSE
+BEGIN
+    PRINT '⚠ Table already exists: ProAssetinEWasteDisposals';
+END
+GO
+
+-- =============================================
+-- Table: ProAssetinSecurityIncidents
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProAssetinSecurityIncidents]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[ProAssetinSecurityIncidents] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [IncidentReference] NVARCHAR(100) NOT NULL,
+        [Title] NVARCHAR(200) NOT NULL,
+        [Description] NVARCHAR(2000) NULL,
+        [Category] NVARCHAR(100) NULL,
+        [Severity] NVARCHAR(50) NOT NULL DEFAULT 'Medium',
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Open',
+        [ReportedDate] DATETIME2 NOT NULL,
+        [ResolvedDate] DATETIME2 NULL,
+        [AffectedSystem] NVARCHAR(300) NULL,
+        [AssignedToName] NVARCHAR(200) NULL,
+        [Notes] NVARCHAR(1000) NULL,
+        [TenantId] NVARCHAR(100) NOT NULL,
+        [CreatedByUserId] NVARCHAR(450) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [UpdatedAt] DATETIME2 NULL,
+        CONSTRAINT [PK_ProAssetinSecurityIncidents] PRIMARY KEY ([Id])
+    );
+
+    CREATE UNIQUE INDEX [IX_ProAssetinSecurityIncidents_RefTenant] ON [dbo].[ProAssetinSecurityIncidents]([IncidentReference], [TenantId]);
+    CREATE INDEX [IX_ProAssetinSecurityIncidents_TenantId] ON [dbo].[ProAssetinSecurityIncidents]([TenantId]);
+    CREATE INDEX [IX_ProAssetinSecurityIncidents_Status] ON [dbo].[ProAssetinSecurityIncidents]([Status]);
+    CREATE INDEX [IX_ProAssetinSecurityIncidents_Severity] ON [dbo].[ProAssetinSecurityIncidents]([Severity]);
+    CREATE INDEX [IX_ProAssetinSecurityIncidents_ReportedDate] ON [dbo].[ProAssetinSecurityIncidents]([ReportedDate]);
+    CREATE INDEX [IX_ProAssetinSecurityIncidents_CreatedByUserId] ON [dbo].[ProAssetinSecurityIncidents]([CreatedByUserId]);
+    PRINT '✓ Table created: ProAssetinSecurityIncidents';
+END
+ELSE
+BEGIN
+    PRINT '⚠ Table already exists: ProAssetinSecurityIncidents';
+END
+GO
+
 PRINT '';
 PRINT '===============================================';
 PRINT 'Tenant Database Schema Creation Complete!';
-PRINT 'Total Tables Created: 8';
+PRINT 'Total Tables Created: 11';
 PRINT 'Database: ' + DB_NAME();
 PRINT '===============================================';
 GO

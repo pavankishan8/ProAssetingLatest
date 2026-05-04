@@ -1,0 +1,154 @@
+<div class="add-invoice-wrapper">
+  <div class="invoice-form-container">
+    <h1 class="page-title">{{ isEditMode ? 'Edit Invoice' : 'Create Invoice' }}</h1>
+    
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="invoice-form">
+      <div class="form-grid">
+        <!-- Basic Information Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">🧾</span>
+            Invoice Details
+          </h3>
+
+          <div class="form-group">
+            <label for="invoiceNumber">Invoice Number <span class="required">*</span></label>
+            <input 
+              id="invoiceNumber"
+              type="text" 
+              formControlName="invoiceNumber" 
+              placeholder="e.g., INV-20240101-001"
+              class="form-input"
+              [class.error]="f['invoiceNumber'].invalid && f['invoiceNumber'].touched">
+            <div class="error-message" *ngIf="f['invoiceNumber'].hasError('required') && f['invoiceNumber'].touched">
+              Invoice Number is required
+            </div>
+            <div class="error-message" *ngIf="f['invoiceNumber'].hasError('maxlength') && f['invoiceNumber'].touched">
+              Invoice Number is too long
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="vendorName">Vendor Name</label>
+            <input 
+              id="vendorName"
+              type="text" 
+              formControlName="vendorName" 
+              placeholder="Enter vendor name"
+              class="form-input"
+              [class.error]="f['vendorName'].invalid && f['vendorName'].touched">
+          </div>
+
+          <div class="form-group">
+            <label for="invoiceDate">Invoice Date <span class="required">*</span></label>
+            <input 
+              id="invoiceDate"
+              type="date" 
+              formControlName="invoiceDate"
+              class="form-input"
+              [class.error]="f['invoiceDate'].invalid && f['invoiceDate'].touched">
+            <div class="error-message" *ngIf="f['invoiceDate'].hasError('required') && f['invoiceDate'].touched">
+              Invoice Date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input 
+              id="dueDate"
+              type="date" 
+              formControlName="dueDate"
+              class="form-input">
+          </div>
+        </div>
+
+        <!-- Amount & Status Section -->
+        <div class="form-column">
+          <h3 class="section-title">
+            <span class="icon">💰</span>
+            Amount & Status
+          </h3>
+
+          <div class="form-group">
+            <label for="amount">Amount <span class="required">*</span></label>
+            <div class="input-with-prefix">
+              <span class="prefix">{{ currencySymbol }}</span>
+              <input 
+                id="amount"
+                type="number" 
+                formControlName="amount" 
+                placeholder="0.00"
+                step="0.01"
+                min="0.01"
+                class="form-input"
+                [class.error]="f['amount'].invalid && f['amount'].touched">
+            </div>
+            <div class="error-message" *ngIf="f['amount'].hasError('required') && f['amount'].touched">
+              Amount is required
+            </div>
+            <div class="error-message" *ngIf="f['amount'].hasError('min') && f['amount'].touched">
+              Amount must be greater than 0
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status <span class="required">*</span></label>
+            <select 
+              id="status"
+              formControlName="status"
+              class="form-input"
+              [class.error]="f['status'].invalid && f['status'].touched">
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+            <div class="error-message" *ngIf="f['status'].hasError('required') && f['status'].touched">
+              Status is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="purchaseOrderNumber">Purchase Order Number</label>
+            <input 
+              id="purchaseOrderNumber"
+              type="text" 
+              formControlName="purchaseOrderNumber" 
+              placeholder="e.g., PO-20240101-001"
+              class="form-input"
+              [class.error]="f['purchaseOrderNumber'].invalid && f['purchaseOrderNumber'].touched">
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <div class="form-section-full">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea 
+            id="description"
+            formControlName="description" 
+            rows="4" 
+            placeholder="Additional notes or details about this invoice"
+            class="form-input"
+            [class.error]="f['description'].invalid && f['description'].touched"></textarea>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>{{ isEditMode ? 'Updating invoice...' : 'Creating invoice...' }}</p>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading || invoiceForm.invalid">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Invoice' : 'Create Invoice') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

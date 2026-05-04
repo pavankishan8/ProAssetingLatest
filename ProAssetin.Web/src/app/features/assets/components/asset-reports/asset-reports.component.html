@@ -118,22 +118,22 @@
 
           <!-- Category Report -->
           <div *ngSwitchCase="'category'" class="category-report">
-            <div *ngFor="let item of getObjectEntries(report.data)" class="report-item">
+            <div *ngFor="let item of report.entries" class="report-item">
               <div class="report-label">{{ item.key }}</div>
               <div class="report-value">{{ item.value }}</div>
             </div>
-            <div *ngIf="getObjectEntries(report.data).length === 0" class="empty-state">
+            <div *ngIf="!report.entries || report.entries.length === 0" class="empty-state">
               <p>No category data available</p>
             </div>
           </div>
 
           <!-- Status Report -->
           <div *ngSwitchCase="'status'" class="status-report">
-            <div *ngFor="let item of getObjectEntries(report.data)" class="report-item">
+            <div *ngFor="let item of report.entries" class="report-item">
               <div class="report-label">{{ item.key }}</div>
               <div class="report-value">{{ item.value }}</div>
             </div>
-            <div *ngIf="getObjectEntries(report.data).length === 0" class="empty-state">
+            <div *ngIf="!report.entries || report.entries.length === 0" class="empty-state">
               <p>No status data available</p>
             </div>
           </div>

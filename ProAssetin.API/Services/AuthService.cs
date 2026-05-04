@@ -35,7 +35,7 @@ namespace ProAssetin.API.Services
                 return (false, null, "Invalid email or password", null);
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, lockoutOnFailure: true);
+           var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
                 return (false, null, "Invalid email or password", null);

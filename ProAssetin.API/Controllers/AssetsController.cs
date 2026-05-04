@@ -28,25 +28,55 @@ namespace ProAssetin.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAssets([FromQuery] AssetQueryDto query)
         {
-            var tenantId = HttpContext.Items["TenantId"]?.ToString();
-            if (string.IsNullOrEmpty(tenantId))
+            try
             {
-                return Unauthorized();
+                var tenantId = HttpContext.Items["TenantId"]?.ToString();
+                if (string.IsNullOrEmpty(tenantId))
+                {
+                    _logger.LogWarning("GetAssets: TenantId not found in HttpContext");
+                    return Unauthorized();
+                }
+
+                _logger.LogInformation("Getting assets for tenant: {TenantId}, Page: {PageNumber}, PageSize: {PageSize}", 
+                    tenantId, query.PageNumber, query.PageSize);
+
+                (IEnumerable<AssetDto> Assets, int TotalCount) result;
+                try
+                {
+                    result = await _assetService.GetAssetsAsync(query, tenantId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error getting assets for tenant {TenantId}", tenantId);
+                    return StatusCode(500, new { message = $"Error retrieving assets: {ex.Message}" });
+                }
+                
+                _logger.LogInformation("Found {Count} assets for tenant {TenantId}", result.TotalCount, tenantId);
+
+                try
+                {
+                    Response.Headers.Add("X-Total-Count", result.TotalCount.ToString());
+                    Response.Headers.Add("X-Page-Number", query.PageNumber.ToString());
+                    Response.Headers.Add("X-Page-Size", query.PageSize.ToString());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error adding response headers");
+                }
+
+                return Ok(new
+                {
+                    data = result.Assets,
+                    totalCount = result.TotalCount,
+                    pageNumber = query.PageNumber,
+                    pageSize = query.PageSize
+                });
             }
-
-            var result = await _assetService.GetAssetsAsync(query, tenantId);
-
-            Response.Headers.Add("X-Total-Count", result.TotalCount.ToString());
-            Response.Headers.Add("X-Page-Number", query.PageNumber.ToString());
-            Response.Headers.Add("X-Page-Size", query.PageSize.ToString());
-
-            return Ok(new
+            catch (Exception ex)
             {
-                data = result.Assets,
-                totalCount = result.TotalCount,
-                pageNumber = query.PageNumber,
-                pageSize = query.PageSize
-            });
+                _logger.LogError(ex, "Unexpected error in GetAssets endpoint");
+                return StatusCode(500, new { message = $"Internal server error: {ex.Message}" });
+            }
         }
 
         [HttpGet("{id}")]

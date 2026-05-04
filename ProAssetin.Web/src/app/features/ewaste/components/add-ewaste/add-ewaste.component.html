@@ -1,0 +1,76 @@
+<div class="ewaste-form-wrap">
+  <div class="ewaste-form-card">
+    <h1>{{ isEditMode ? 'Edit e-waste disposal' : 'New e-waste disposal' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <div class="col">
+          <h3>Record</h3>
+          <div class="field">
+            <label for="ref">Disposal reference <span class="req">*</span></label>
+            <input id="ref" class="inp" formControlName="disposalReference" [readonly]="isEditMode">
+            <p class="hint" *ngIf="!isEditMode">Auto-generated; you may edit before save.</p>
+          </div>
+          <div class="field">
+            <label for="desc">Item description <span class="req">*</span></label>
+            <textarea id="desc" class="inp" rows="3" formControlName="itemDescription" placeholder="e.g. 12 decommissioned laptops, batteries removed"></textarea>
+          </div>
+          <div class="field">
+            <label for="cat">Category</label>
+            <input id="cat" class="inp" formControlName="category" placeholder="e.g. Laptops, Monitors">
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="qty">Quantity</label>
+              <input id="qty" type="number" class="inp" formControlName="quantity" min="1">
+            </div>
+            <div class="field">
+              <label for="kg">Est. weight (kg)</label>
+              <input id="kg" type="number" class="inp" formControlName="estimatedWeightKg" step="0.01" min="0">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Logistics & compliance</h3>
+          <div class="field">
+            <label for="aid">Linked asset Id (optional)</label>
+            <input id="aid" type="number" class="inp" formControlName="assetId" min="1" placeholder="ProAssetinAssets.Id if known">
+          </div>
+          <div class="field">
+            <label for="rec">Recycler / vendor</label>
+            <input id="rec" class="inp" formControlName="recyclerName">
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="pu">Pickup date</label>
+              <input id="pu" type="date" class="inp" formControlName="pickupDate">
+            </div>
+            <div class="field">
+              <label for="dd">Disposal date</label>
+              <input id="dd" type="date" class="inp" formControlName="disposalDate">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cert">Certificate / audit reference</label>
+            <input id="cert" class="inp" formControlName="certificateReference">
+          </div>
+          <div class="field">
+            <label for="st">Status <span class="req">*</span></label>
+            <select id="st" class="inp" formControlName="status">
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="notes">Notes</label>
+            <textarea id="notes" class="inp" rows="2" formControlName="notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn sec" (click)="cancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn pri" [disabled]="loading">{{ loading ? 'Saving…' : 'Save' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

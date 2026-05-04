@@ -1,0 +1,73 @@
+<div class="add-sec">
+  <div class="card">
+    <h1>{{ isEdit ? 'Edit security incident' : 'Report security incident' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid">
+        <div class="col">
+          <h3>Summary</h3>
+          <div class="fld">
+            <label for="ref">Reference <span class="r">*</span></label>
+            <input id="ref" class="inp" formControlName="incidentReference" [readonly]="isEdit">
+          </div>
+          <div class="fld">
+            <label for="ttl">Title <span class="r">*</span></label>
+            <input id="ttl" class="inp" formControlName="title" placeholder="Short summary">
+          </div>
+          <div class="fld">
+            <label for="desc">Description</label>
+            <textarea id="desc" class="inp" rows="4" formControlName="description"></textarea>
+          </div>
+          <div class="fld">
+            <label for="cat">Category</label>
+            <input id="cat" class="inp" formControlName="category" placeholder="e.g. Phishing, Access, Data">
+          </div>
+        </div>
+        <div class="col">
+          <h3>Classification & dates</h3>
+          <div class="row2">
+            <div class="fld">
+              <label for="sev">Severity <span class="r">*</span></label>
+              <select id="sev" class="inp" formControlName="severity">
+                <option *ngFor="let s of severities" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label for="st">Status <span class="r">*</span></label>
+              <select id="st" class="inp" formControlName="status">
+                <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="fld">
+              <label for="rd">Reported date <span class="r">*</span></label>
+              <input id="rd" type="date" class="inp" formControlName="reportedDate">
+            </div>
+            <div class="fld">
+              <label for="resd">Resolved date</label>
+              <input id="resd" type="date" class="inp" formControlName="resolvedDate">
+            </div>
+          </div>
+          <div class="fld">
+            <label for="sys">Affected system / location</label>
+            <input id="sys" class="inp" formControlName="affectedSystem">
+          </div>
+          <div class="fld">
+            <label for="asg">Assigned to (name)</label>
+            <input id="asg" class="inp" formControlName="assignedToName">
+          </div>
+          <div class="fld">
+            <label for="n">Notes</label>
+            <textarea id="n" class="inp" rows="2" formControlName="notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="act">
+        <button type="button" class="btn sec" (click)="cancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn pri" [disabled]="loading">{{ loading ? 'Saving…' : 'Save' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

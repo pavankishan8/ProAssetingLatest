@@ -20,5 +20,13 @@ export class ReportService {
   getStatusStats(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/reports/status-stats`);
   }
+
+  getWeeklyAdditions(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/reports/weekly-additions`);
+  }
+
+  getMonthlyAdditions(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/reports/monthly-additions`);
+  }
 }
 

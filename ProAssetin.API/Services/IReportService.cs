@@ -5,6 +5,8 @@ namespace ProAssetin.API.Services
         Task<object> GetAssetSummaryAsync(string tenantId);
         Task<object> GetAssetStatsByCategoryAsync(string tenantId);
         Task<object> GetAssetStatsByStatusAsync(string tenantId);
+        Task<object> GetAssetAdditionsWeeklyAsync(string tenantId);
+        Task<object> GetAssetAdditionsMonthlyAsync(string tenantId);
     }
 }
 

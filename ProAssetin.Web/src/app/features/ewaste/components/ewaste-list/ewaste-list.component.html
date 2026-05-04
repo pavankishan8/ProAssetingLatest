@@ -1,0 +1,73 @@
+<div class="ewaste-list-container">
+  <div class="ewaste-list-header">
+    <h1>E-waste management</h1>
+    <button type="button" class="btn btn-primary" routerLink="/ewaste/add"><span class="icon">+</span> Add disposal</button>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="q">Search</label>
+        <input id="q" class="filter-input" [(ngModel)]="searchTerm" (keyup.enter)="applyFilters()" placeholder="Reference, description, recycler…">
+      </div>
+      <div class="filter-group">
+        <label for="st">Status</label>
+        <select id="st" class="filter-input" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option [ngValue]="undefined">All</option>
+          <option *ngFor="let s of statuses" [ngValue]="s">{{ s }}</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container"><div class="spinner"></div><p>Loading…</p></div>
+
+  <div *ngIf="!loading" class="ewaste-table-wrap">
+    <table class="ewaste-table">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Asset tag</th>
+          <th>Recycler</th>
+          <th>Pickup</th>
+          <th>Disposed</th>
+          <th>Status</th>
+          <th>Created by</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of rows" [class]="statusClass(r.status)">
+          <td><strong>{{ r.disposalReference }}</strong></td>
+          <td>{{ r.itemDescription }}</td>
+          <td>{{ r.quantity }}</td>
+          <td>{{ r.assetTag || '—' }}</td>
+          <td>{{ r.recyclerName || '—' }}</td>
+          <td>{{ formatDate(r.pickupDate || undefined) }}</td>
+          <td>{{ formatDate(r.disposalDate || undefined) }}</td>
+          <td><span class="pill" [class]="statusClass(r.status)">{{ r.status }}</span></td>
+          <td>{{ r.createdByUserName || '—' }}</td>
+          <td>
+            <div class="actions">
+              <button type="button" class="btn-icon" (click)="edit(r)" title="Edit">✏️</button>
+              <button type="button" class="btn-icon danger" (click)="remove(r)" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="rows.length === 0"><td colspan="10" class="empty">No e-waste records</td></tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pager">
+      <button type="button" class="btn btn-secondary" [disabled]="pageNumber === 1" (click)="onPageChange(pageNumber - 1)">Previous</button>
+      <span>Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)</span>
+      <button type="button" class="btn btn-secondary" [disabled]="pageNumber === totalPages" (click)="onPageChange(pageNumber + 1)">Next</button>
+    </div>
+  </div>
+</div>

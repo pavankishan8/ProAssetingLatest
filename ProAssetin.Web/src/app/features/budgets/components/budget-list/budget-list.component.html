@@ -1,0 +1,92 @@
+<div class="budget-list-container">
+  <div class="budget-list-header">
+    <h1>Budget management</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" routerLink="/budgets/add">
+        <span class="icon">+</span>
+        Add budget
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input id="search" type="text" class="filter-input" [(ngModel)]="searchTerm"
+          (keyup.enter)="applyFilters()" placeholder="Name, description, category">
+      </div>
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select id="status" class="filter-input" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option [ngValue]="undefined">All</option>
+          <option *ngFor="let s of statuses" [ngValue]="s">{{ s }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="fy">Fiscal year</label>
+        <input id="fy" type="number" class="filter-input" [(ngModel)]="fiscalYearFilter"
+          (keyup.enter)="applyFilters()" placeholder="e.g. 2026">
+      </div>
+      <div class="filter-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading budgets...</p>
+  </div>
+
+  <div *ngIf="!loading" class="budget-table-container">
+    <table class="budget-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Fiscal year</th>
+          <th>Category</th>
+          <th>Allocated</th>
+          <th>Spent</th>
+          <th>Remaining</th>
+          <th>Status</th>
+          <th>Created by</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of budgets" [class]="getStatusClass(b.status)">
+          <td>
+            <strong>{{ b.name }}</strong>
+            <div *ngIf="b.description" class="sub-info">{{ b.description }}</div>
+          </td>
+          <td>{{ b.fiscalYear }}</td>
+          <td>{{ b.category || '—' }}</td>
+          <td><strong>{{ formatCurrency(b.allocatedAmount) }}</strong></td>
+          <td>{{ formatCurrency(b.spentAmount) }}</td>
+          <td [class.negative]="b.remainingAmount < 0">{{ formatCurrency(b.remainingAmount) }}</td>
+          <td>
+            <span class="status-badge" [class]="getStatusClass(b.status)">{{ b.status }}</span>
+          </td>
+          <td>{{ b.createdByUserName || '—' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button type="button" class="btn-icon btn-edit" (click)="editBudget(b)" title="Edit">✏️</button>
+              <button type="button" class="btn-icon btn-delete" (click)="deleteBudget(b)" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="budgets.length === 0">
+          <td colspan="9" class="no-data">No budgets found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button type="button" class="btn btn-secondary" [disabled]="pageNumber === 1" (click)="onPageChange(pageNumber - 1)">Previous</button>
+      <span class="page-info">Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }} total)</span>
+      <button type="button" class="btn btn-secondary" [disabled]="pageNumber === totalPages" (click)="onPageChange(pageNumber + 1)">Next</button>
+    </div>
+  </div>
+</div>

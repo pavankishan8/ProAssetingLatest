@@ -56,6 +56,32 @@ namespace ProAssetin.API.Controllers
             var stats = await _reportService.GetAssetStatsByStatusAsync(tenantId);
             return Ok(stats);
         }
+
+        [HttpGet("weekly-additions")]
+        public async Task<IActionResult> GetWeeklyAdditions()
+        {
+            var tenantId = HttpContext.Items["TenantId"]?.ToString();
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return Unauthorized();
+            }
+
+            var data = await _reportService.GetAssetAdditionsWeeklyAsync(tenantId);
+            return Ok(data);
+        }
+
+        [HttpGet("monthly-additions")]
+        public async Task<IActionResult> GetMonthlyAdditions()
+        {
+            var tenantId = HttpContext.Items["TenantId"]?.ToString();
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return Unauthorized();
+            }
+
+            var data = await _reportService.GetAssetAdditionsMonthlyAsync(tenantId);
+            return Ok(data);
+        }
     }
 }
 

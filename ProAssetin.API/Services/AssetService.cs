@@ -22,98 +22,154 @@ namespace ProAssetin.API.Services
 
         public async Task<(IEnumerable<AssetDto> Assets, int TotalCount)> GetAssetsAsync(AssetQueryDto query, string tenantId)
         {
-            using var context = _dbContextFactory.CreateDbContext(tenantId);
-
-            // Normalize tenant ID to lowercase for case-insensitive comparison
-            var normalizedTenantId = tenantId?.ToLower();
-
-            var assetsQuery = context.Assets
-                .Where(a => a.TenantId.ToLower() == normalizedTenantId)
-                .AsQueryable();
-
-            // Apply filters
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            try
             {
-                assetsQuery = assetsQuery.Where(a =>
-                    a.Name.Contains(query.SearchTerm) ||
-                    a.AssetId.Contains(query.SearchTerm) ||
-                    a.SerialNumber!.Contains(query.SearchTerm) ||
-                    a.Category.Contains(query.SearchTerm));
+                using var context = _dbContextFactory.CreateDbContext(tenantId);
+
+                // Normalize tenant ID to lowercase for comparison (TenantResolver returns lowercase)
+                var normalizedTenantId = tenantId?.ToLowerInvariant() ?? string.Empty;
+
+                // Query assets - since TenantId in DB is "infosys" (lowercase) and tenantId from JWT is also lowercase
+                // Use direct comparison first, fallback to case-insensitive if needed
+                var assetsQuery = context.Assets
+                    .Where(a => a.TenantId != null && a.TenantId.ToLower() == normalizedTenantId)
+                    .AsQueryable();
+
+                // Apply filters
+                if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+                {
+                    assetsQuery = assetsQuery.Where(a =>
+                        a.Name.Contains(query.SearchTerm) ||
+                        a.AssetId.Contains(query.SearchTerm) ||
+                        a.SerialNumber!.Contains(query.SearchTerm) ||
+                        a.Category.Contains(query.SearchTerm));
+                }
+
+                if (!string.IsNullOrWhiteSpace(query.Category))
+                {
+                    assetsQuery = assetsQuery.Where(a => a.Category == query.Category);
+                }
+
+                if (!string.IsNullOrWhiteSpace(query.Status))
+                {
+                    assetsQuery = assetsQuery.Where(a => a.Status == query.Status);
+                }
+
+                if (!string.IsNullOrWhiteSpace(query.Location))
+                {
+                    assetsQuery = assetsQuery.Where(a => a.Location == query.Location);
+                }
+
+                // Get total count before pagination
+                int totalCount;
+                try
+                {
+                    totalCount = await assetsQuery.CountAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error counting assets: {ex.Message}", ex);
+                }
+
+                // Apply sorting
+                assetsQuery = query.SortBy?.ToLower() switch
+                {
+                    "name" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Name) : assetsQuery.OrderBy(a => a.Name),
+                    "category" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Category) : assetsQuery.OrderBy(a => a.Category),
+                    "status" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Status) : assetsQuery.OrderBy(a => a.Status),
+                    "purchasedate" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.PurchaseDate) : assetsQuery.OrderBy(a => a.PurchaseDate),
+                    _ => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Name) : assetsQuery.OrderBy(a => a.Name)
+                };
+
+                // Apply pagination
+                List<Asset> assets;
+                try
+                {
+                    assets = await assetsQuery
+                        .Skip((query.PageNumber - 1) * query.PageSize)
+                        .Take(query.PageSize)
+                        .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error retrieving paginated assets: {ex.Message}", ex);
+                }
+
+                // Get unique user IDs from assets
+                var userIds = assets
+                    .Where(a => !string.IsNullOrEmpty(a.AssignedToUserId))
+                    .Select(a => a.AssignedToUserId!)
+                    .Distinct()
+                    .ToList();
+
+                // Fetch user names from master database
+                Dictionary<string, string> userNamesDict = new();
+                try
+                {
+                    if (userIds.Any())
+                    {
+                        var users = await _masterContext.Users
+                            .Where(u => userIds.Contains(u.Id))
+                            .Select(u => new { u.Id, u.FirstName, u.LastName })
+                            .ToListAsync();
+
+                        userNamesDict = users.ToDictionary(
+                            u => u.Id,
+                            u => $"{u.FirstName} {u.LastName}"
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error fetching user names: {ex.Message}", ex);
+                }
+
+                // Get unique vendor IDs from assets
+                var vendorIds = assets
+                    .Where(a => a.VendorId.HasValue)
+                    .Select(a => a.VendorId!.Value)
+                    .Distinct()
+                    .ToList();
+
+                // Fetch vendor names from tenant database
+                Dictionary<int, string> vendorNamesDict = new();
+                try
+                {
+                    if (vendorIds.Any())
+                    {
+                        var vendors = await context.Vendors
+                            .Where(v => vendorIds.Contains(v.Id))
+                            .Select(v => new { v.Id, v.VendorName })
+                            .ToListAsync();
+
+                        vendorNamesDict = vendors.ToDictionary(
+                            v => v.Id,
+                            v => v.VendorName
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error fetching vendor names: {ex.Message}", ex);
+                }
+
+                // Map to DTOs
+                IEnumerable<AssetDto> assetDtos;
+                try
+                {
+                    assetDtos = assets.Select(a => MapToDto(a, userNamesDict, vendorNamesDict));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error mapping assets to DTOs: {ex.Message}", ex);
+                }
+
+                return (assetDtos, totalCount);
             }
-
-            if (!string.IsNullOrWhiteSpace(query.Category))
+            catch (Exception ex)
             {
-                assetsQuery = assetsQuery.Where(a => a.Category == query.Category);
+                throw new Exception($"Error in GetAssetsAsync for tenant {tenantId}: {ex.Message}", ex);
             }
-
-            if (!string.IsNullOrWhiteSpace(query.Status))
-            {
-                assetsQuery = assetsQuery.Where(a => a.Status == query.Status);
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.Location))
-            {
-                assetsQuery = assetsQuery.Where(a => a.Location == query.Location);
-            }
-
-            // Get total count before pagination
-            var totalCount = await assetsQuery.CountAsync();
-
-            // Apply sorting
-            assetsQuery = query.SortBy?.ToLower() switch
-            {
-                "name" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Name) : assetsQuery.OrderBy(a => a.Name),
-                "category" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Category) : assetsQuery.OrderBy(a => a.Category),
-                "status" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Status) : assetsQuery.OrderBy(a => a.Status),
-                "purchasedate" => query.SortDescending ? assetsQuery.OrderByDescending(a => a.PurchaseDate) : assetsQuery.OrderBy(a => a.PurchaseDate),
-                _ => query.SortDescending ? assetsQuery.OrderByDescending(a => a.Name) : assetsQuery.OrderBy(a => a.Name)
-            };
-
-            // Apply pagination
-            var assets = await assetsQuery
-                .Skip((query.PageNumber - 1) * query.PageSize)
-                .Take(query.PageSize)
-                .ToListAsync();
-
-            // Get unique user IDs from assets
-            var userIds = assets
-                .Where(a => !string.IsNullOrEmpty(a.AssignedToUserId))
-                .Select(a => a.AssignedToUserId!)
-                .Distinct()
-                .ToList();
-
-            // Fetch user names from master database
-            var users = await _masterContext.Users
-                .Where(u => userIds.Contains(u.Id))
-                .Select(u => new { u.Id, u.FirstName, u.LastName })
-                .ToListAsync();
-
-            var userNamesDict = users.ToDictionary(
-                u => u.Id,
-                u => $"{u.FirstName} {u.LastName}"
-            );
-
-            // Get unique vendor IDs from assets
-            var vendorIds = assets
-                .Where(a => a.VendorId.HasValue)
-                .Select(a => a.VendorId!.Value)
-                .Distinct()
-                .ToList();
-
-            // Fetch vendor names from tenant database
-            var vendors = await context.Vendors
-                .Where(v => vendorIds.Contains(v.Id))
-                .Select(v => new { v.Id, v.VendorName })
-                .ToListAsync();
-
-            var vendorNamesDict = vendors.ToDictionary(
-                v => v.Id,
-                v => v.VendorName
-            );
-
-            var assetDtos = assets.Select(a => MapToDto(a, userNamesDict, vendorNamesDict));
-
-            return (assetDtos, totalCount);
         }
 
         public async Task<AssetDto?> GetAssetByIdAsync(int id, string tenantId)

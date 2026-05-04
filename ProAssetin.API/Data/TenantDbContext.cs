@@ -18,6 +18,9 @@ namespace ProAssetin.API.Data
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Software> Software { get; set; }
         public DbSet<CompanySettings> CompanySettings { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
+        public DbSet<EWasteDisposal> EWasteDisposals { get; set; }
+        public DbSet<SecurityIncident> SecurityIncidents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +35,9 @@ namespace ProAssetin.API.Data
             builder.Entity<Vendor>().ToTable("ProAssetinVendors");
             builder.Entity<Software>().ToTable("ProAssetinSoftware");
             builder.Entity<CompanySettings>().ToTable("ProAssetinCompanySettings");
+            builder.Entity<Budget>().ToTable("ProAssetinBudgets");
+            builder.Entity<EWasteDisposal>().ToTable("ProAssetinEWasteDisposals");
+            builder.Entity<SecurityIncident>().ToTable("ProAssetinSecurityIncidents");
 
             // Configure Asset entity
             builder.Entity<Asset>(entity =>
@@ -127,6 +133,46 @@ namespace ProAssetin.API.Data
                 entity.HasIndex(e => e.TenantId).IsUnique(); // One settings per tenant
                 entity.Property(e => e.TenantId).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.CompanyName).HasMaxLength(200).IsRequired();
+            });
+
+            builder.Entity<Budget>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.TenantId);
+                entity.HasIndex(e => e.FiscalYear);
+                entity.HasIndex(e => e.Status);
+                entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+            });
+
+            builder.Entity<EWasteDisposal>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.TenantId);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => new { e.DisposalReference, e.TenantId }).IsUnique();
+                entity.HasIndex(e => e.DisposalDate);
+                entity.Property(e => e.DisposalReference).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.ItemDescription).HasMaxLength(500).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+                entity.HasOne(e => e.Asset)
+                    .WithMany()
+                    .HasForeignKey(e => e.AssetId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            builder.Entity<SecurityIncident>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.TenantId);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.Severity);
+                entity.HasIndex(e => e.ReportedDate);
+                entity.HasIndex(e => new { e.IncidentReference, e.TenantId }).IsUnique();
+                entity.Property(e => e.IncidentReference).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+                entity.Property(e => e.Severity).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
             });
         }
     }

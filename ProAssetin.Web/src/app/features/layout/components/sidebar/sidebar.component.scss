@@ -124,10 +124,6 @@ mat-nav-list {
       align-items: center;
       justify-content: center;
       vertical-align: middle;
-
-      &.expanded {
-        transform: rotate(180deg);
-      }
     }
   }
 
@@ -137,7 +133,7 @@ mat-nav-list {
     font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
 
     .submenu-item {
-      padding-left: 56px !important; // Indent submenu items
+      padding-left: 30px !important; // Slightly less indent — sits a bit left of parent row
       font-family: 'Nunito', 'Roboto', "Helvetica Neue", sans-serif !important;
 
       &.active {
@@ -175,7 +171,7 @@ mat-nav-list {
   mat-nav-list {
     .submenu {
       .submenu-item {
-        padding-left: 48px !important;
+        padding-left: 26px !important;
 
         mat-icon {
           font-size: 16px;
