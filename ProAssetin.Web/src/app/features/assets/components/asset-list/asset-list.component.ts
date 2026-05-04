@@ -227,4 +227,9 @@ export class AssetListComponent implements OnInit {
       }
     });
   }
+
+  /** Same slug logic as Assets dashboard for status badge styling */
+  statusKey(status: string | undefined | null): string {
+    return (status || 'unknown').toLowerCase().replace(/\s+/g, '-');
+  }
 }

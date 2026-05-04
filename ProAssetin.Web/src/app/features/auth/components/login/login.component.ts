@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   error = '';
+  hidePassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
 

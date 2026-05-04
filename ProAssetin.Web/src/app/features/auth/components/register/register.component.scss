@@ -1,54 +1,83 @@
-@import '../login/login.component.scss';
+@import '../../styles/auth-page.shared.scss';
 
-.register-container {
-  @extend .login-container;
+/* Card stays shorter than the viewport; scroll inside if content grows */
+:host .auth-main .glass {
+  max-height: calc(100vh - clamp(80px, 16vh, 160px));
+  max-height: calc(100dvh - clamp(80px, 16vh, 160px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(18px, 3vw, 28px);
 }
 
-.register-card {
-  @extend .login-card;
-  max-width: 500px;
+:host .auth-main .glass__head {
+  margin-bottom: 20px;
+}
 
-  .form-row {
-    display: flex;
-    gap: 16px;
+:host .auth-main .glass__form--register {
+  gap: 14px;
+}
 
-    .half-width {
-      flex: 1;
-    }
-  }
+:host .auth-main .glass__foot,
+:host .auth-main .glass__foot--solo {
+  margin-top: 16px;
+  padding-top: 14px;
+}
 
-  .success-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #4caf50;
-    padding: 16px;
-    background-color: #e8f5e9;
-    border-radius: 4px;
-    margin-bottom: 16px;
+:host .auth-main .submit {
+  margin-top: 4px;
+}
 
-    mat-icon {
-      color: #4caf50;
-    }
-  }
+.login-shell--register {
+  grid-template-columns: 1fr minmax(320px, 500px);
+}
 
-  .register-button {
-    @extend .login-button;
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-row .field {
+  min-width: 0;
+}
+
+.success-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #a7f3d0;
+  background: rgba(6, 78, 59, 0.45);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  margin-bottom: 8px;
+}
+
+.success-panel mat-icon {
+  flex-shrink: 0;
+  color: #34d399;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+
+.glass__foot--solo {
+  justify-content: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 960px) {
+  .login-shell--register {
+    grid-template-columns: 1fr;
   }
 }
 
-// Responsive
 @media (max-width: 600px) {
-  .register-card {
-    .form-row {
-      flex-direction: column;
-      gap: 0;
-
-      .half-width {
-        width: 100%;
-      }
-    }
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
-

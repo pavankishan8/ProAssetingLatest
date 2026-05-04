@@ -1,0 +1,78 @@
+<div class="pm-wrap">
+  <div class="pm-head">
+    <h1>Project management</h1>
+    <button type="button" class="btn pri" routerLink="/projects/add"><span class="ic">+</span> New project</button>
+  </div>
+
+  <div class="filters">
+    <div class="fg">
+      <label for="q">Search</label>
+      <input id="q" class="inp" [(ngModel)]="searchTerm" (keyup.enter)="apply()" placeholder="Reference, name, manager…">
+    </div>
+    <div class="fg">
+      <label for="st">Status</label>
+      <select id="st" class="inp" [(ngModel)]="statusFilter" (change)="apply()">
+        <option [ngValue]="undefined">All</option>
+        <option *ngFor="let s of statuses" [ngValue]="s">{{ s }}</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label for="pr">Priority</label>
+      <select id="pr" class="inp" [(ngModel)]="priorityFilter" (change)="apply()">
+        <option [ngValue]="undefined">All</option>
+        <option *ngFor="let s of priorities" [ngValue]="s">{{ s }}</option>
+      </select>
+    </div>
+    <div class="fa">
+      <button type="button" class="btn sec" (click)="clear()">Clear</button>
+      <button type="button" class="btn pri" (click)="apply()">Apply</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="load"><div class="spin"></div><p>Loading…</p></div>
+
+  <div *ngIf="!loading" class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Name</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Manager</th>
+          <th>Dept / client</th>
+          <th>Created by</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of rows">
+          <td><strong>{{ r.projectReference }}</strong></td>
+          <td>{{ r.name }}</td>
+          <td><span class="pri" [class]="priClass(r.priority)">{{ r.priority }}</span></td>
+          <td><span class="st" [class]="stClass(r.status)">{{ r.status }}</span></td>
+          <td>{{ d(r.startDate || undefined) }}</td>
+          <td>{{ d(r.endDate || undefined) }}</td>
+          <td>{{ r.projectManagerName || '—' }}</td>
+          <td>{{ r.departmentOrClient || '—' }}</td>
+          <td>{{ r.createdByUserName || '—' }}</td>
+          <td>
+            <div class="act">
+              <button type="button" class="bi" (click)="edit(r)" title="Edit">✏️</button>
+              <button type="button" class="bi d" (click)="remove(r)" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="rows.length === 0"><td colspan="10" class="empty">No projects</td></tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pg">
+      <button type="button" class="btn sec" [disabled]="pageNumber === 1" (click)="page(pageNumber - 1)">Previous</button>
+      <span>Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }})</span>
+      <button type="button" class="btn sec" [disabled]="pageNumber === totalPages" (click)="page(pageNumber + 1)">Next</button>
+    </div>
+  </div>
+</div>

@@ -73,8 +73,9 @@
             <td>{{ asset.name }}</td>
             <td>{{ asset.category }}</td>
             <td>
-              <span class="status-badge" [class]="'status-' + (asset.status?.toLowerCase().replace(' ', '-') || '')">
-                {{ asset.status }}
+              <span class="asset-status-badge" [attr.data-status]="statusKey(asset.status)">
+                <span class="asset-status-badge__dot" aria-hidden="true"></span>
+                <span class="asset-status-badge__text">{{ asset.status }}</span>
               </span>
             </td>
             <td>{{ asset.location || '-' }}</td>

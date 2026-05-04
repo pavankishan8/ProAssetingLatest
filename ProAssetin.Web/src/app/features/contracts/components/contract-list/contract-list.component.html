@@ -1,0 +1,77 @@
+<div class="cm-wrap">
+  <div class="cm-head">
+    <h1>Contract management</h1>
+    <button type="button" class="btn pri" routerLink="/contracts/add"><span class="ic">+</span> Add contract</button>
+  </div>
+
+  <div class="filters">
+    <div class="fg">
+      <label for="q">Search</label>
+      <input id="q" class="inp" [(ngModel)]="searchTerm" (keyup.enter)="apply()" placeholder="Reference, title, counterparty…">
+    </div>
+    <div class="fg">
+      <label for="st">Status</label>
+      <select id="st" class="inp" [(ngModel)]="statusFilter" (change)="apply()">
+        <option [ngValue]="undefined">All</option>
+        <option *ngFor="let s of statuses" [ngValue]="s">{{ s }}</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label for="ty">Type (exact)</label>
+      <input id="ty" class="inp" [(ngModel)]="typeFilter" (keyup.enter)="apply()" placeholder="e.g. MSA, Support">
+    </div>
+    <div class="fa">
+      <button type="button" class="btn sec" (click)="clear()">Clear</button>
+      <button type="button" class="btn pri" (click)="apply()">Apply</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="load"><div class="spin"></div><p>Loading…</p></div>
+
+  <div *ngIf="!loading" class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Title</th>
+          <th>Counterparty</th>
+          <th>Type</th>
+          <th>Value</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Renewal reminder</th>
+          <th>Status</th>
+          <th>Created by</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of rows">
+          <td><strong>{{ r.contractReference }}</strong></td>
+          <td>{{ r.title }}</td>
+          <td>{{ r.counterpartyName || '—' }}</td>
+          <td>{{ r.contractType || '—' }}</td>
+          <td>{{ money(r.contractValue) }}</td>
+          <td>{{ d(r.startDate || undefined) }}</td>
+          <td>{{ d(r.endDate || undefined) }}</td>
+          <td>{{ d(r.renewalReminderDate || undefined) }}</td>
+          <td><span class="st" [class]="stClass(r.status)">{{ r.status }}</span></td>
+          <td>{{ r.createdByUserName || '—' }}</td>
+          <td>
+            <div class="act">
+              <button type="button" class="bi" (click)="edit(r)" title="Edit">✏️</button>
+              <button type="button" class="bi d" (click)="remove(r)" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="rows.length === 0"><td colspan="11" class="empty">No contracts</td></tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pg">
+      <button type="button" class="btn sec" [disabled]="pageNumber === 1" (click)="page(pageNumber - 1)">Previous</button>
+      <span>Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }})</span>
+      <button type="button" class="btn sec" [disabled]="pageNumber === totalPages" (click)="page(pageNumber + 1)">Next</button>
+    </div>
+  </div>
+</div>

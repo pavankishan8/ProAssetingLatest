@@ -1,0 +1,49 @@
+<div class="ac-wrap">
+  <div class="ac-card">
+    <h1>{{ isEdit ? 'Edit ticket' : 'New ticket' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid">
+        <div class="col">
+          <h3>Request</h3>
+          <div class="fld">
+            <label for="ttl">Title <span class="rq">*</span></label>
+            <input id="ttl" class="inp" formControlName="taskTitle" placeholder="Short summary of the issue or request">
+          </div>
+          <div class="fld">
+            <label for="asg">Assignee (name)</label>
+            <input id="asg" class="inp" formControlName="taskAssignedToName" placeholder="Optional — display name">
+          </div>
+          <div class="fld">
+            <label for="d">Description</label>
+            <textarea id="d" class="inp" rows="4" formControlName="description" placeholder="Steps to reproduce, expected behavior, links…"></textarea>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Workflow</h3>
+          <div class="fld">
+            <label for="st">State <span class="rq">*</span></label>
+            <select id="st" class="inp" formControlName="taskState">
+              <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="pr">Priority <span class="rq">*</span></label>
+            <select id="pr" class="inp" formControlName="priority">
+              <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+            </select>
+          </div>
+          <div class="fld" *ngIf="isEdit">
+            <label for="res">Resolution</label>
+            <textarea id="res" class="inp" rows="3" formControlName="resolution" placeholder="What was done to close or resolve"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="act">
+        <button type="button" class="btn sec" (click)="cancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn pri" [disabled]="loading">{{ loading ? 'Saving…' : 'Save' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

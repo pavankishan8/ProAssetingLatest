@@ -13,6 +13,8 @@ export class RegisterComponent {
   loading = false;
   error = '';
   success = false;
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,6 +41,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 

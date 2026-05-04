@@ -423,10 +423,86 @@ BEGIN
 END
 GO
 
+-- =============================================
+-- Table: ProAssetinProjects
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProAssetinProjects]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[ProAssetinProjects] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [ProjectReference] NVARCHAR(100) NOT NULL,
+        [Name] NVARCHAR(200) NOT NULL,
+        [Description] NVARCHAR(2000) NULL,
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Planning',
+        [Priority] NVARCHAR(50) NOT NULL DEFAULT 'Medium',
+        [StartDate] DATETIME2 NULL,
+        [EndDate] DATETIME2 NULL,
+        [ProjectManagerName] NVARCHAR(200) NULL,
+        [DepartmentOrClient] NVARCHAR(200) NULL,
+        [Notes] NVARCHAR(2000) NULL,
+        [TenantId] NVARCHAR(100) NOT NULL,
+        [CreatedByUserId] NVARCHAR(450) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [UpdatedAt] DATETIME2 NULL,
+        CONSTRAINT [PK_ProAssetinProjects] PRIMARY KEY ([Id])
+    );
+
+    CREATE UNIQUE INDEX [IX_ProAssetinProjects_RefTenant] ON [dbo].[ProAssetinProjects]([ProjectReference], [TenantId]);
+    CREATE INDEX [IX_ProAssetinProjects_TenantId] ON [dbo].[ProAssetinProjects]([TenantId]);
+    CREATE INDEX [IX_ProAssetinProjects_Status] ON [dbo].[ProAssetinProjects]([Status]);
+    CREATE INDEX [IX_ProAssetinProjects_Priority] ON [dbo].[ProAssetinProjects]([Priority]);
+    CREATE INDEX [IX_ProAssetinProjects_StartDate] ON [dbo].[ProAssetinProjects]([StartDate]);
+    CREATE INDEX [IX_ProAssetinProjects_CreatedByUserId] ON [dbo].[ProAssetinProjects]([CreatedByUserId]);
+    PRINT '✓ Table created: ProAssetinProjects';
+END
+ELSE
+BEGIN
+    PRINT '⚠ Table already exists: ProAssetinProjects';
+END
+GO
+
+-- =============================================
+-- Table: ProAssetinContracts
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProAssetinContracts]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[ProAssetinContracts] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [ContractReference] NVARCHAR(100) NOT NULL,
+        [Title] NVARCHAR(200) NOT NULL,
+        [CounterpartyName] NVARCHAR(200) NULL,
+        [ContractType] NVARCHAR(100) NULL,
+        [StartDate] DATETIME2 NULL,
+        [EndDate] DATETIME2 NULL,
+        [RenewalReminderDate] DATETIME2 NULL,
+        [ContractValue] DECIMAL(18,2) NULL,
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Draft',
+        [Notes] NVARCHAR(2000) NULL,
+        [TenantId] NVARCHAR(100) NOT NULL,
+        [CreatedByUserId] NVARCHAR(450) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [UpdatedAt] DATETIME2 NULL,
+        CONSTRAINT [PK_ProAssetinContracts] PRIMARY KEY ([Id])
+    );
+
+    CREATE UNIQUE INDEX [IX_ProAssetinContracts_RefTenant] ON [dbo].[ProAssetinContracts]([ContractReference], [TenantId]);
+    CREATE INDEX [IX_ProAssetinContracts_TenantId] ON [dbo].[ProAssetinContracts]([TenantId]);
+    CREATE INDEX [IX_ProAssetinContracts_Status] ON [dbo].[ProAssetinContracts]([Status]);
+    CREATE INDEX [IX_ProAssetinContracts_EndDate] ON [dbo].[ProAssetinContracts]([EndDate]);
+    CREATE INDEX [IX_ProAssetinContracts_CounterpartyName] ON [dbo].[ProAssetinContracts]([CounterpartyName]);
+    CREATE INDEX [IX_ProAssetinContracts_CreatedByUserId] ON [dbo].[ProAssetinContracts]([CreatedByUserId]);
+    PRINT '✓ Table created: ProAssetinContracts';
+END
+ELSE
+BEGIN
+    PRINT '⚠ Table already exists: ProAssetinContracts';
+END
+GO
+
 PRINT '';
 PRINT '===============================================';
 PRINT 'Tenant Database Schema Creation Complete!';
-PRINT 'Total Tables Created: 11';
+PRINT 'Total Tables Created: 13';
 PRINT 'Database: ' + DB_NAME();
 PRINT '===============================================';
 GO

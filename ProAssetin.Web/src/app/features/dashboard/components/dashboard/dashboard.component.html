@@ -2,10 +2,11 @@
   <!-- Header Section -->
   <div class="dashboard-header">
     <div class="header-content">
-      <h1>Dashboard Overview</h1>
-      <p class="subtitle">Welcome back! Here's what's happening with your assets.</p>
+      <p class="dashboard-eyebrow">Control center</p>
+      <h1>Operations dashboard</h1>
+      <p class="subtitle">Live metrics across assets, procurement, finance, and governance — refresh anytime.</p>
     </div>
-    <button mat-raised-button color="primary" (click)="loadDashboardData()" [disabled]="loading">
+    <button mat-flat-button color="primary" class="dashboard-refresh" (click)="loadDashboardData()" [disabled]="loading">
       <mat-icon>refresh</mat-icon>
       Refresh
     </button>
@@ -20,8 +21,9 @@
   <!-- Dashboard Content -->
   <div *ngIf="!loading && dashboardData" class="dashboard-content">
     <!-- Stats Cards Grid - All Modules -->
-    <div class="stats-section">
-      <h2 class="section-title">Overview Statistics</h2>
+    <div class="stats-section dash-panel">
+      <h2 class="section-title">Live metrics</h2>
+      <p class="section-lead">Counts and rollups for every active module in your tenant.</p>
       
       <!-- Assets Section -->
       <div class="module-stats-group">
@@ -238,6 +240,242 @@
           </mat-card>
         </div>
       </div>
+
+      <!-- Invoices -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>receipt_long</mat-icon>
+          Invoices
+        </h3>
+        <div class="stats-grid">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">receipt</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.invoices?.total || 0 }}</div>
+                <div class="stat-label">Total invoices</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-success" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">check_circle</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.invoices?.paid || 0 }}</div>
+                <div class="stat-label">Paid</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-warning" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">schedule</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.invoices?.pending || 0 }}</div>
+                <div class="stat-label">Pending</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-error" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">warning</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.invoices?.overdue || 0 }}</div>
+                <div class="stat-label">Overdue</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-info" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">payments</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ formatCurrency(dashboardData.invoices?.outstandingAmount || 0) }}</div>
+                <div class="stat-label">Outstanding (excl. paid)</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Budgets -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>account_balance_wallet</mat-icon>
+          Budgets
+        </h3>
+        <div class="stats-grid">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">account_balance_wallet</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.budgets?.total || 0 }}</div>
+                <div class="stat-label">Budget records</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-success" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">trending_up</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.budgets?.active || 0 }}</div>
+                <div class="stat-label">Active</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-info" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">savings</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ formatCurrency(dashboardData.budgets?.allocated || 0) }}</div>
+                <div class="stat-label">Allocated</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-warning" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">shopping_bag</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ formatCurrency(dashboardData.budgets?.spent || 0) }}</div>
+                <div class="stat-label">Spent</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- E-Waste -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>delete_sweep</mat-icon>
+          E-Waste
+        </h3>
+        <div class="stats-grid stats-grid--compact">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">delete_sweep</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.ewaste?.total || 0 }}</div>
+                <div class="stat-label">Disposal records</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>shield</mat-icon>
+          Security
+        </h3>
+        <div class="stats-grid stats-grid--compact">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">shield</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.security?.total || 0 }}</div>
+                <div class="stat-label">Incidents</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-warning" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">priority_high</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.security?.open || 0 }}</div>
+                <div class="stat-label">Open / in progress</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Projects & Contracts -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>work</mat-icon>
+          Projects &amp; contracts
+        </h3>
+        <div class="stats-grid stats-grid--compact">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">assignment</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.projects?.total || 0 }}</div>
+                <div class="stat-label">Projects</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-info" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">description</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.contracts?.total || 0 }}</div>
+                <div class="stat-label">Contracts</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Ticketing -->
+      <div class="module-stats-group">
+        <h3 class="module-title">
+          <mat-icon>confirmation_number</mat-icon>
+          Ticketing
+        </h3>
+        <div class="stats-grid stats-grid--compact">
+          <mat-card class="stat-card stat-card-primary" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">local_activity</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.tickets?.total || 0 }}</div>
+                <div class="stat-label">Tickets</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card stat-card-warning" [class.mat-elevation-z4]="true">
+            <mat-card-content>
+              <div class="stat-icon-wrapper">
+                <mat-icon class="stat-icon">pending_actions</mat-icon>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value">{{ dashboardData.tickets?.open || 0 }}</div>
+                <div class="stat-label">Open / in progress</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </div>
 
     <!-- Charts and Additional Info -->
@@ -304,8 +542,8 @@
         </mat-card>
       </div>
 
-      <!-- Recent Activity & Quick Actions -->
-      <div class="bottom-section">
+      <!-- Recent activity -->
+      <div class="bottom-section bottom-section--single">
         <mat-card class="activity-card" [class.mat-elevation-z2]="true">
           <mat-card-header>
             <mat-card-title>
@@ -334,38 +572,6 @@
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="quick-actions-card" [class.mat-elevation-z2]="true">
-          <mat-card-header>
-            <mat-card-title>
-              <mat-icon>flash_on</mat-icon>
-              Quick Actions
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="actions-grid">
-              <button mat-raised-button color="primary" routerLink="/assets/add">
-                <mat-icon>add</mat-icon>
-                Add Asset
-              </button>
-              <button mat-raised-button color="accent" routerLink="/assets/list">
-                <mat-icon>list</mat-icon>
-                View Assets
-              </button>
-              <button mat-raised-button routerLink="/vendors/add">
-                <mat-icon>store</mat-icon>
-                Add Vendor
-              </button>
-              <button mat-raised-button routerLink="/purchases/add">
-                <mat-icon>shopping_cart</mat-icon>
-                Create PO
-              </button>
-              <button mat-raised-button routerLink="/softwares/add">
-                <mat-icon>apps</mat-icon>
-                Add Software
-              </button>
-            </div>
-          </mat-card-content>
-        </mat-card>
       </div>
     </div>
   </div>
@@ -380,4 +586,37 @@
       Retry
     </button>
   </div>
+
+  <section class="feature-hub" aria-labelledby="feature-hub-heading">
+    <div class="feature-hub__intro">
+      <h2 id="feature-hub-heading">Workspace modules</h2>
+      <p>Open any area of ProAssetin — same destinations as the sidebar.</p>
+    </div>
+    <div class="feature-grid">
+      <mat-card *ngFor="let mod of featureModules" class="feature-card">
+        <mat-card-content>
+          <div class="feature-card__top">
+            <div class="feature-card__icon" [style.background]="mod.color + '22'" [style.color]="mod.color">
+              <mat-icon>{{ mod.icon }}</mat-icon>
+            </div>
+            <div class="feature-card__titles">
+              <h3>{{ mod.title }}</h3>
+              <p>{{ mod.description }}</p>
+            </div>
+          </div>
+          <nav class="feature-card__nav">
+            <a
+              *ngFor="let link of mod.links"
+              mat-stroked-button
+              [routerLink]="link.route"
+              class="feature-card__link"
+            >
+              <mat-icon>{{ link.icon }}</mat-icon>
+              {{ link.label }}
+            </a>
+          </nav>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
 </div>

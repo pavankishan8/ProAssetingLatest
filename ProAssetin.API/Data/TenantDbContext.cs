@@ -21,6 +21,8 @@ namespace ProAssetin.API.Data
         public DbSet<Budget> Budgets { get; set; }
         public DbSet<EWasteDisposal> EWasteDisposals { get; set; }
         public DbSet<SecurityIncident> SecurityIncidents { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,6 +40,8 @@ namespace ProAssetin.API.Data
             builder.Entity<Budget>().ToTable("ProAssetinBudgets");
             builder.Entity<EWasteDisposal>().ToTable("ProAssetinEWasteDisposals");
             builder.Entity<SecurityIncident>().ToTable("ProAssetinSecurityIncidents");
+            builder.Entity<Project>().ToTable("ProAssetinProjects");
+            builder.Entity<Contract>().ToTable("ProAssetinContracts");
 
             // Configure Asset entity
             builder.Entity<Asset>(entity =>
@@ -89,7 +93,7 @@ namespace ProAssetin.API.Data
                 entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
             });
 
-            // Configure Ticket entity
+            // Configure Ticket entity (ApplicationUser lives in master DB — ignore navigation on tenant context)
             builder.Entity<Ticket>(entity =>
             {
                 entity.HasKey(e => e.TaskID);
@@ -98,6 +102,7 @@ namespace ProAssetin.API.Data
                 entity.Property(e => e.TaskTitle).HasMaxLength(500).IsRequired();
                 entity.Property(e => e.TaskState).HasMaxLength(50).IsRequired();
                 entity.Property(e => e.Priority).HasMaxLength(50);
+                entity.Ignore(e => e.AssignedToUser);
             });
 
             // Configure Vendor entity
@@ -172,6 +177,33 @@ namespace ProAssetin.API.Data
                 entity.Property(e => e.IncidentReference).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
                 entity.Property(e => e.Severity).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+            });
+
+            builder.Entity<Project>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.TenantId);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.Priority);
+                entity.HasIndex(e => new { e.ProjectReference, e.TenantId }).IsUnique();
+                entity.HasIndex(e => e.StartDate);
+                entity.Property(e => e.ProjectReference).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Priority).HasMaxLength(50).IsRequired();
+            });
+
+            builder.Entity<Contract>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.TenantId);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => new { e.ContractReference, e.TenantId }).IsUnique();
+                entity.HasIndex(e => e.EndDate);
+                entity.HasIndex(e => e.CounterpartyName);
+                entity.Property(e => e.ContractReference).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
                 entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
             });
         }

@@ -1,0 +1,69 @@
+<div class="ap-wrap">
+  <div class="ap-card">
+    <h1>{{ isEdit ? 'Edit project' : 'New project' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid">
+        <div class="col">
+          <h3>Overview</h3>
+          <div class="fld">
+            <label for="ref">Reference <span class="rq">*</span></label>
+            <input id="ref" class="inp" formControlName="projectReference" [readonly]="isEdit">
+          </div>
+          <div class="fld">
+            <label for="nm">Name <span class="rq">*</span></label>
+            <input id="nm" class="inp" formControlName="name">
+          </div>
+          <div class="fld">
+            <label for="desc">Description</label>
+            <textarea id="desc" class="inp" rows="4" formControlName="description"></textarea>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Schedule & ownership</h3>
+          <div class="r2">
+            <div class="fld">
+              <label for="st">Status <span class="rq">*</span></label>
+              <select id="st" class="inp" formControlName="status">
+                <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label for="pr">Priority <span class="rq">*</span></label>
+              <select id="pr" class="inp" formControlName="priority">
+                <option *ngFor="let s of priorities" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="r2">
+            <div class="fld">
+              <label for="sd">Start date</label>
+              <input id="sd" type="date" class="inp" formControlName="startDate">
+            </div>
+            <div class="fld">
+              <label for="ed">End date</label>
+              <input id="ed" type="date" class="inp" formControlName="endDate">
+            </div>
+          </div>
+          <div class="fld">
+            <label for="pm">Project manager</label>
+            <input id="pm" class="inp" formControlName="projectManagerName">
+          </div>
+          <div class="fld">
+            <label for="dc">Department / client</label>
+            <input id="dc" class="inp" formControlName="departmentOrClient">
+          </div>
+          <div class="fld">
+            <label for="n">Notes</label>
+            <textarea id="n" class="inp" rows="2" formControlName="notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="act">
+        <button type="button" class="btn sec" (click)="cancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn pri" [disabled]="loading">{{ loading ? 'Saving…' : 'Save' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

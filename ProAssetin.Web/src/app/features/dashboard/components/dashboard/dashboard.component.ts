@@ -1,7 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { DashboardService } from '../../../../core/services/dashboard.service';
 import { CurrencyService } from '../../../../core/services/currency.service';
+
+export interface DashboardFeatureLink {
+  label: string;
+  route: string;
+  icon: string;
+}
+
+export interface DashboardFeatureModule {
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  links: DashboardFeatureLink[];
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -16,10 +29,132 @@ export class DashboardComponent implements OnInit {
   recentActivities: any[] = [];
   maxStatusCount = 0;
 
+  /** All app areas — same coverage as the sidebar, surfaced on the home dashboard */
+  readonly featureModules: DashboardFeatureModule[] = [
+    {
+      title: 'Assets',
+      description: 'Inventory, allocation, and reports',
+      icon: 'inventory_2',
+      color: '#1976d2',
+      links: [
+        { label: 'Dashboard', route: '/assets/dashboard', icon: 'dashboard' },
+        { label: 'List', route: '/assets/list', icon: 'list' },
+        { label: 'Add', route: '/assets/add', icon: 'add' },
+        { label: 'Reports', route: '/assets/reports', icon: 'assessment' }
+      ]
+    },
+    {
+      title: 'Vendors',
+      description: 'Supplier records and contacts',
+      icon: 'store',
+      color: '#00897b',
+      links: [
+        { label: 'List', route: '/vendors/list', icon: 'list' },
+        { label: 'Add', route: '/vendors/add', icon: 'person_add' }
+      ]
+    },
+    {
+      title: 'Purchases',
+      description: 'Purchase orders and approvals',
+      icon: 'shopping_cart',
+      color: '#f57c00',
+      links: [
+        { label: 'Orders', route: '/purchases/list', icon: 'list' },
+        { label: 'Create PO', route: '/purchases/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Software',
+      description: 'Licenses and compliance',
+      icon: 'apps',
+      color: '#7b1fa2',
+      links: [
+        { label: 'List', route: '/softwares/list', icon: 'list' },
+        { label: 'Add', route: '/softwares/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Invoices',
+      description: 'AP tracking and status',
+      icon: 'receipt_long',
+      color: '#0288d1',
+      links: [
+        { label: 'List', route: '/invoices/list', icon: 'list' },
+        { label: 'Add', route: '/invoices/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Budgets',
+      description: 'Fiscal planning and spend',
+      icon: 'account_balance_wallet',
+      color: '#388e3c',
+      links: [
+        { label: 'List', route: '/budgets/list', icon: 'list' },
+        { label: 'Add', route: '/budgets/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'E-Waste',
+      description: 'Disposal and chain-of-custody',
+      icon: 'delete_sweep',
+      color: '#5d4037',
+      links: [
+        { label: 'List', route: '/ewaste/list', icon: 'list' },
+        { label: 'Add', route: '/ewaste/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Security',
+      description: 'Incidents and governance',
+      icon: 'shield',
+      color: '#c62828',
+      links: [
+        { label: 'Incidents', route: '/security/list', icon: 'list' },
+        { label: 'Report', route: '/security/add', icon: 'report' }
+      ]
+    },
+    {
+      title: 'Projects',
+      description: 'Initiatives and delivery',
+      icon: 'assignment',
+      color: '#00695c',
+      links: [
+        { label: 'List', route: '/projects/list', icon: 'list' },
+        { label: 'New', route: '/projects/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Contracts',
+      description: 'Agreements and renewals',
+      icon: 'description',
+      color: '#455a64',
+      links: [
+        { label: 'List', route: '/contracts/list', icon: 'list' },
+        { label: 'Add', route: '/contracts/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Ticketing',
+      description: 'Help desk and IT service requests',
+      icon: 'confirmation_number',
+      color: '#6d28d9',
+      links: [
+        { label: 'Queue', route: '/tickets/list', icon: 'list' },
+        { label: 'New ticket', route: '/tickets/add', icon: 'add' }
+      ]
+    },
+    {
+      title: 'Settings',
+      description: 'Company profile and preferences',
+      icon: 'settings',
+      color: '#546e7a',
+      links: [{ label: 'Open', route: '/settings', icon: 'tune' }]
+    }
+  ];
+
   constructor(
     private dashboardService: DashboardService,
-    private currencyService: CurrencyService,
-    private router: Router
+    private currencyService: CurrencyService
   ) {}
 
   ngOnInit(): void {

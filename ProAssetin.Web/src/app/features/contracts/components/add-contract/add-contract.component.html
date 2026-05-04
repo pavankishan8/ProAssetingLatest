@@ -1,0 +1,68 @@
+<div class="ac-wrap">
+  <div class="ac-card">
+    <h1>{{ isEdit ? 'Edit contract' : 'Add contract' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="grid">
+        <div class="col">
+          <h3>Contract</h3>
+          <div class="fld">
+            <label for="ref">Reference <span class="rq">*</span></label>
+            <input id="ref" class="inp" formControlName="contractReference" [readonly]="isEdit">
+          </div>
+          <div class="fld">
+            <label for="ttl">Title <span class="rq">*</span></label>
+            <input id="ttl" class="inp" formControlName="title">
+          </div>
+          <div class="fld">
+            <label for="cp">Counterparty</label>
+            <input id="cp" class="inp" formControlName="counterpartyName" placeholder="Vendor or customer name">
+          </div>
+          <div class="fld">
+            <label for="typ">Contract type</label>
+            <input id="typ" class="inp" formControlName="contractType" placeholder="e.g. MSA, SOW, Support, License">
+          </div>
+          <div class="fld">
+            <label for="val">Contract value</label>
+            <div class="pref">
+              <span class="sym">{{ currencySymbol }}</span>
+              <input id="val" type="number" class="inp grow" formControlName="contractValue" step="0.01" min="0" placeholder="Optional">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Dates & status</h3>
+          <div class="fld">
+            <label for="st">Status <span class="rq">*</span></label>
+            <select id="st" class="inp" formControlName="status">
+              <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="r2">
+            <div class="fld">
+              <label for="sd">Start date</label>
+              <input id="sd" type="date" class="inp" formControlName="startDate">
+            </div>
+            <div class="fld">
+              <label for="ed">End date</label>
+              <input id="ed" type="date" class="inp" formControlName="endDate">
+            </div>
+          </div>
+          <div class="fld">
+            <label for="rr">Renewal reminder</label>
+            <input id="rr" type="date" class="inp" formControlName="renewalReminderDate">
+          </div>
+          <div class="fld">
+            <label for="n">Notes</label>
+            <textarea id="n" class="inp" rows="3" formControlName="notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="act">
+        <button type="button" class="btn sec" (click)="cancel()" [disabled]="loading">Cancel</button>
+        <button type="submit" class="btn pri" [disabled]="loading">{{ loading ? 'Saving…' : 'Save' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

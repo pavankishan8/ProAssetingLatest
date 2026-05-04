@@ -155,7 +155,10 @@
                 <span class="asset-id">{{ asset.assetId }}</span>
                 <span class="asset-name">{{ asset.name }}</span>
               </div>
-              <mat-chip [class]="'status-' + asset.status.toLowerCase()">{{ asset.status }}</mat-chip>
+              <span class="asset-status-badge" [attr.data-status]="statusKey(asset.status)">
+                <span class="asset-status-badge__dot" aria-hidden="true"></span>
+                <span class="asset-status-badge__text">{{ asset.status }}</span>
+              </span>
             </div>
           </div>
           <div *ngIf="stats.recentAssets.length === 0" class="empty-state">

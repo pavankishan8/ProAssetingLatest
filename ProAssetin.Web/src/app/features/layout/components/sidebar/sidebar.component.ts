@@ -92,6 +92,36 @@ export class SidebarComponent implements OnInit {
         { icon: 'add', label: 'Report incident', route: '/security/add' }
       ]
     },
+    {
+      icon: 'assignment',
+      label: 'Projects',
+      route: '/projects',
+      expanded: false,
+      children: [
+        { icon: 'list', label: 'Project list', route: '/projects/list' },
+        { icon: 'add', label: 'New project', route: '/projects/add' }
+      ]
+    },
+    {
+      icon: 'description',
+      label: 'Contracts',
+      route: '/contracts',
+      expanded: false,
+      children: [
+        { icon: 'list', label: 'Contract list', route: '/contracts/list' },
+        { icon: 'add', label: 'Add contract', route: '/contracts/add' }
+      ]
+    },
+    {
+      icon: 'confirmation_number',
+      label: 'Ticketing',
+      route: '/tickets',
+      expanded: false,
+      children: [
+        { icon: 'list', label: 'Ticket queue', route: '/tickets/list' },
+        { icon: 'add', label: 'New ticket', route: '/tickets/add' }
+      ]
+    },
     { icon: 'settings', label: 'Settings', route: '/settings' }
   ];
 

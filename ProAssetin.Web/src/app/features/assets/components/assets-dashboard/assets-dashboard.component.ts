@@ -311,5 +311,10 @@ export class AssetsDashboardComponent implements OnInit, AfterViewInit {
     const index = category ? category.charCodeAt(0) % colors.length : 0;
     return colors[index];
   }
+
+  /** Normalizes API status for Recent Assets badge styling */
+  statusKey(status: string | undefined | null): string {
+    return (status || 'unknown').toLowerCase().replace(/\s+/g, '-');
+  }
 }
 

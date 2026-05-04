@@ -1,0 +1,76 @@
+<div class="tk-wrap">
+  <div class="tk-head">
+    <h1>Ticketing</h1>
+    <button type="button" class="btn pri" routerLink="/tickets/add"><span class="ic">+</span> New ticket</button>
+  </div>
+
+  <div class="filters">
+    <div class="fg">
+      <label for="q">Search</label>
+      <input id="q" class="inp" [(ngModel)]="searchTerm" (keyup.enter)="apply()" placeholder="Title, description, assignee…">
+    </div>
+    <div class="fg">
+      <label for="st">State</label>
+      <select id="st" class="inp" [(ngModel)]="stateFilter" (change)="apply()">
+        <option [ngValue]="undefined">All</option>
+        <option *ngFor="let s of states" [ngValue]="s">{{ s }}</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label for="pr">Priority</label>
+      <select id="pr" class="inp" [(ngModel)]="priorityFilter" (change)="apply()">
+        <option [ngValue]="undefined">All</option>
+        <option *ngFor="let p of priorities" [ngValue]="p">{{ p }}</option>
+      </select>
+    </div>
+    <div class="fa">
+      <button type="button" class="btn sec" (click)="clear()">Clear</button>
+      <button type="button" class="btn pri" (click)="apply()">Apply</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="load"><div class="spin"></div><p>Loading…</p></div>
+
+  <div *ngIf="!loading" class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Assignee</th>
+          <th>State</th>
+          <th>Priority</th>
+          <th>Created</th>
+          <th>Resolved</th>
+          <th>Created by</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of rows">
+          <td><strong>{{ r.id }}</strong></td>
+          <td>{{ r.taskTitle }}</td>
+          <td>{{ r.taskAssignedToName || '—' }}</td>
+          <td><span [ngClass]="['st', stateSlug(r.taskState)]">{{ r.taskState }}</span></td>
+          <td>{{ r.priority || '—' }}</td>
+          <td>{{ d(r.createdAt) }}</td>
+          <td>{{ d(r.resolvedAt || undefined) }}</td>
+          <td>{{ r.createdByUserName || '—' }}</td>
+          <td>
+            <div class="act">
+              <button type="button" class="bi" (click)="edit(r)" title="Edit">✏️</button>
+              <button type="button" class="bi d" (click)="remove(r)" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="rows.length === 0"><td colspan="9" class="empty">No tickets</td></tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="totalPages > 1" class="pg">
+      <button type="button" class="btn sec" [disabled]="pageNumber === 1" (click)="page(pageNumber - 1)">Previous</button>
+      <span>Page {{ pageNumber }} of {{ totalPages }} ({{ totalCount }})</span>
+      <button type="button" class="btn sec" [disabled]="pageNumber === totalPages" (click)="page(pageNumber + 1)">Next</button>
+    </div>
+  </div>
+</div>

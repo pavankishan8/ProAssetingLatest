@@ -126,6 +126,9 @@ builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IEWasteService, EWasteService>();
 builder.Services.AddScoped<ISecurityIncidentService, SecurityIncidentService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 // CORS configuration
 builder.Services.AddCors(options =>
