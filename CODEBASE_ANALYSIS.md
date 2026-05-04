@@ -2,50 +2,30 @@
 
 ## 📋 Project Overview
 
-**ProAssetin** is a comprehensive Enterprise Asset Management (EAM) system built with Angular 15 frontend and ASP.NET Web API (C#) backend. The application manages IT assets throughout their lifecycle, including creation, allocation, tracking, maintenance, repair, disposal, and reporting.
+**ProAssetin** is a comprehensive Enterprise Asset Management (EAM) system built with an Angular frontend and ASP.NET Core Web API. The application manages IT assets throughout their lifecycle, including creation, allocation, tracking, maintenance, repair, disposal, and reporting.
 
 ---
 
 ## 🏗️ Architecture & Technology Stack
 
-### Frontend (Angular Application)
-- **Framework**: Angular 15.2.7
-- **Language**: TypeScript 4.9.4
-- **Styling**: SCSS, Bootstrap 5.3.2, Angular Material 15.2.9
-- **State Management**: Services with RxJS (BehaviorSubject, Subject)
-- **HTTP Client**: Angular HttpClient
-- **Build Tool**: Angular CLI 15.2.7
+### Frontend (`ProAssetin.Web`)
+- **Framework**: Angular 18+
+- **Language**: TypeScript
+- **Styling**: SCSS, Angular Material
+- **State Management**: Services with RxJS
+- **HTTP Client**: Angular `HttpClient`
+- **Build Tool**: Angular CLI
 
-### Backend (API)
-- **Framework**: ASP.NET Web API 2 (Target Framework: .NET 4.6.1)
-- **Language**: C# 
-- **Database**: SQL Server (Connection: `AL230377-BLR\SQLEXPRESS`)
-- **Architecture Pattern**: RESTful API with Controller-Service-Repository pattern
-- **CORS**: Enabled for all origins (`*`)
+### Backend (`ProAssetin.API`)
+- **Framework**: ASP.NET Core 8 Web API
+- **Language**: C#
+- **Database**: SQL Server (per-environment connection strings in `appsettings.json`)
+- **Patterns**: REST controllers, application services, EF Core contexts (master + per-tenant)
+- **Authentication**: ASP.NET Core Identity and JWT where configured
 
 ### Key Libraries & Dependencies
 
-#### Frontend Dependencies:
-- **UI Libraries**: 
-  - Angular Material (Components, Forms, Dialog, Stepper, Pagination)
-  - Bootstrap 5.3.2
-  - CoreUI Angular 4.5.25
-  - PrimeNG 17.12.0
-  - FontAwesome 6.4.2
-- **Charts**: Chart.js 4.4.2, ng2-charts 6.0.0
-- **Notifications**: angular2-notifications, ngx-toastr 17.0.2
-- **Utilities**: 
-  - jsPDF 2.5.1 (PDF generation)
-  - html2canvas 1.4.1
-  - File-saver 2.0.5
-  - Signature Pad 4.0.2
-- **Pagination**: ngx-pagination 6.0.3
-
-#### Backend Dependencies:
-- **EPPlus 6.2.10** - Excel file processing
-- **MailKit 4.2.0** - Email functionality
-- **Newtonsoft.Json 13.0.1** - JSON serialization
-- **Microsoft.AspNet.WebApi 5.3.0** - Web API framework
+Exact versions and packages are defined in `ProAssetin.Web/package.json` and `ProAssetin.API/ProAssetin.API.csproj`. Typical areas include Angular Material, Chart.js / ng2-charts, Serilog, EF Core, and Swagger/OpenAPI for the API.
 
 ---
 
@@ -53,25 +33,20 @@
 
 ```
 ProAssetin/
-├── Mine/
-│   └── Proassetin/              # Angular Frontend
-│       ├── src/
-│       │   └── app/
-│       │       ├── Assets/      # Asset management modules
-│       │       ├── Components/  # UI components
-│       │       ├── Purchase/    # Purchase order modules
-│       │       ├── Settings/    # User/system settings
-│       │       ├── Services/    # Business logic services
-│       │       └── Environments/# Environment configuration
-│       └── dist/                # Production build
+├── ProAssetin.API/              # ASP.NET Core 8 Web API
+│   ├── Controllers/
+│   ├── Services/
+│   ├── Models/
+│   ├── Data/                    # DbContexts, SQL scripts, seeding
+│   ├── Middleware/
+│   └── Program.cs
 │
-└── Mine API/
-    └── ProAssetin-API/
-        └── Test/                # ASP.NET Web API Backend
-            ├── Controllers/     # API endpoints
-            ├── Models/          # Data models
-            ├── Utils/           # Utility classes
-            └── packages/        # NuGet packages
+└── ProAssetin.Web/              # Angular frontend
+    └── src/
+        └── app/
+            ├── core/            # Guards, interceptors, shared services
+            ├── features/        # Feature modules (auth, assets, dashboard, etc.)
+            └── shared/
 ```
 
 ---

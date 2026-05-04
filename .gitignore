@@ -8,6 +8,7 @@ package-lock.json
 # Build outputs
 **/dist/
 **/build/
+_build_verify/
 **/.angular/
 *.tsbuildinfo
 
@@ -72,8 +73,4 @@ desktop.ini
 # CODEBASE_ANALYSIS.md
 # COMPLETE_PROJECT_STRUCTURE.md
 # PROJECT_STATUS.md
-
-# Old project folders (uncomment if you want to ignore these)
-# Mine/
-# Mine API/
 
